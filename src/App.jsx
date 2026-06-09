@@ -1,4 +1,6 @@
+import { useState } from "react";
 function App() {
+  const [activeCategory, setActiveCategory] = useState("video");
   return (
     <div className="min-h-screen bg-black text-white overflow-x-hidden scroll-smooth">
       <nav className="fixed top-0 left-0 w-full z-50 bg-black/90 backdrop-blur-md border-b border-white/10">
@@ -19,8 +21,8 @@ function App() {
             <a href="#home" className="text-gray-300 hover:text-red-500 hover:-translate-y-1 transition-all duration-300">
               Home
             </a>
-            <a href="#portfolio" className="text-gray-300 hover:text-red-500 hover:-translate-y-1 transition-all duration-300">
-              Portfolio
+            <a href="#works" className="text-gray-300 hover:text-red-500 hover:-translate-y-1 transition-all duration-300">
+              Work
             </a>
             <a href="#services" className="text-gray-300 hover:text-red-500 hover:-translate-y-1 transition-all duration-300">
               Services
@@ -53,12 +55,12 @@ function App() {
             <div className="absolute right-[1000px] top-[-400px] w-[800px] h-[500px] rounded-full bg-red-600/30 blur-[120px] z-0"></div>
 
             <div className="relative z-20 max-w-none">
-              <h1 className="font-black uppercase leading-[0.9] tracking-wider text-[8rem] md:text-[10rem]">
-                <span className="block text-[4.5rem] sm:text-[6rem] md:text-[8rem]">
+              <h1 className="font-black uppercase leading-[0.9] tracking-tight text-[8rem] md:text-[10rem]">
+                <span className="block text-[4.5rem] sm:text-[5rem] md:text-[7rem]">  
                   Freelance
                 </span>
 
-                <span className="block text-[3.7rem] sm:text-[5.5rem] md:text-[8rem] whitespace-nowrap">
+                <span className="block text-[3.7rem] sm:text-[4rem] md:text-[5.2rem] whitespace-nowrap">
                   <span
                     className="text-red-600"
                     style={{
@@ -70,7 +72,7 @@ function App() {
                       `,
                     }}
                   >
-                    VIDEO EDITOR
+                    VIDEO EDITOR & DESIGNER
                   </span>{" "}
                 </span>
               </h1>
@@ -82,22 +84,22 @@ function App() {
 
               <div className="flex flex-wrap gap-6">
                 <a
-                  href="#portfolio"
+                  href="#works"
                   className="bg-red-600 hover:bg-red-700 px-8 py-4 md:px-15 md:py-6 rounded-full font-bold shadow-[0_0_25px_rgba(255,0,0,0.4)] hover:shadow-[0_0_40px_rgba(255,0,0,0.7)] transition-all duration-300 hover:scale-105"
                 >
-                  View Portfolio
+                  View Works
                 </a>
 
                 <a
                   href="#contact"
                   className="bg-black hover:bg-red-950/60 px-8 py-4 md:px-15 md:py-6 rounded-full font-bold border border-white/10 hover:border-red-600 shadow-[0_0_20px_rgba(0,0,0,0.7)] transition-all duration-300 hover:scale-105"
                 >
-                  Contact
+                  Get in Touch
                 </a>
               </div>
             </div>
 
-            <div className="absolute right-[10px] bottom-[-120px] z-30">
+            <div className="absolute right-[-25px] bottom-[-140px] z-30">
               <img
                 src="/images/zeth.png"
                 alt="Stoiceth"
@@ -111,17 +113,262 @@ function App() {
         <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-50 text-xs md:text-base uppercase tracking-widest text-gray-200 text-center whitespace-nowrap">
           Video Editor • Filmmaker • Content Creator
         </div>
+
+        
+
       </section>
 
-      <section id="portfolio" className="min-h-screen px-12 py-28 bg-black">
-          <div className="max-w-screen-2xl mx-auto">
-            <h2 className="text-5xl font-black mb-6">Portfolio</h2>
-            <p className="text-gray-400">
-              My video projects will go here.
+      <section id="works" className="relative min-h-screen px-6 md:px-12 py-28 bg-transparent overflow-hidden">
+        <div className="absolute left-[-200px] top-[150px] w-[500px] h-[500px] rounded-full bg-red-600/20 blur-[130px]"></div>
+        <div className="absolute right-[-250px] bottom-[100px] w-[600px] h-[600px] rounded-full bg-red-600/10 blur-[150px]"></div>
+
+        <div className="relative z-10 max-w-screen-2xl mx-auto">
+          <div className="text-center mb-14">
+            <p className="text-red-500 uppercase tracking-[6px] text-sm font-bold mb-4">
+              My Work
+            </p>
+
+            <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tight mb-5">
+              Featured Work
+            </h2>
+
+            <p className="text-gray-400 max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
+               A collection of projects showcasing my skills in video editing, motion graphics, and graphic design.
             </p>
           </div>
-        </section>
 
+          <div className="max-w-xl mx-auto mb-14 p-2 rounded-full border border-red-900/50 bg-white/5 backdrop-blur-md flex gap-2">
+            <button
+              onClick={() => setActiveCategory("video")}
+              className={`w-1/2 py-4 rounded-full font-bold transition-all duration-300 ${
+                activeCategory === "video"
+                  ? "bg-red-600 text-white shadow-[0_0_25px_rgba(255,0,0,0.35)]"
+                  : "bg-black/60 text-gray-300 border border-white/5 hover:border-red-600 hover:text-white"
+              }`}
+            >
+              Video Editing
+            </button>
+
+            <button
+              onClick={() => setActiveCategory("design")}
+              className={`w-1/2 py-4 rounded-full font-bold transition-all duration-300 ${
+                activeCategory === "design"
+                  ? "bg-red-600 text-white shadow-[0_0_25px_rgba(255,0,0,0.35)]"
+                  : "bg-black/60 text-gray-300 border border-white/5 hover:border-red-600 hover:text-white"
+              }`}
+            >
+              Graphic Design
+            </button>
+          </div>
+
+          {activeCategory === "video" && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="group rounded-3xl overflow-hidden bg-[#0b0b0b] border border-red-950/60 hover:border-red-600/80 shadow-[0_0_25px_rgba(0,0,0,0.8)] hover:shadow-[0_0_35px_rgba(255,0,0,0.25)] transition-all duration-500 hover:-translate-y-3">
+                <div className="h-64 bg-gradient-to-br from-red-950 via-black to-[#1a1a1a] flex items-center justify-center overflow-hidden">
+                  <div className="text-6xl opacity-80 group-hover:scale-110 transition-all duration-500">
+                    🎬
+                  </div>
+                </div>
+
+                <div className="p-8">
+                  <h3 className="text-2xl font-black mb-4">
+                    Video Projects
+                  </h3>
+
+                  <p className="text-gray-400 leading-relaxed mb-8">
+                    Short films, documentaries, long-form edits, and cinematic storytelling projects.
+                  </p>
+
+                  <div className="flex justify-between items-center">
+                    <span className="text-red-400 border border-red-800/70 px-4 py-2 rounded-full text-sm font-semibold">
+                      Storytelling
+                    </span>
+
+                    <a
+                      href="https://drive.google.com/drive/folders/1QILnebgXc3eU4qGKyZbBK7QOr_oGSzYz?usp=drive_link"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-white font-bold group-hover:text-red-500 transition-all"
+                     > 
+                      View Collection →
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div className="group rounded-3xl overflow-hidden bg-[#0b0b0b] border border-red-950/60 hover:border-red-600/80 shadow-[0_0_25px_rgba(0,0,0,0.8)] hover:shadow-[0_0_35px_rgba(255,0,0,0.25)] transition-all duration-500 hover:-translate-y-3">
+                <div className="h-64 bg-gradient-to-br from-red-900/60 via-black to-[#1a1a1a] flex items-center justify-center overflow-hidden">
+                  <div className="text-6xl opacity-80 group-hover:scale-110 transition-all duration-500">
+                    📱
+                  </div>
+                </div>
+
+                <div className="p-8">
+                  <h3 className="text-2xl font-black mb-4">
+                    Reels & Short-form
+                  </h3>
+
+                  <p className="text-gray-400 leading-relaxed mb-8">
+                    TikTok videos, school reels, social media edits, and fast-paced vertical content.
+                  </p>
+
+                  <div className="flex justify-between items-center">
+                    <span className="text-red-400 border border-red-800/70 px-4 py-2 rounded-full text-sm font-semibold">
+                      Short-form
+                    </span>
+
+                    <a
+                      href="https://drive.google.com/drive/folders/1a0mAH7ANyyg60TS0IY9jFyr-1uRNVkpX?usp=drive_link"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-white font-bold group-hover:text-red-500 transition-all"
+                    >
+                      View Collection →
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div className="group rounded-3xl overflow-hidden bg-[#0b0b0b] border border-red-950/60 hover:border-red-600/80 shadow-[0_0_25px_rgba(0,0,0,0.8)] hover:shadow-[0_0_35px_rgba(255,0,0,0.25)] transition-all duration-500 hover:-translate-y-3">
+                <div className="h-64 bg-gradient-to-br from-red-950 via-[#120000] to-black flex items-center justify-center overflow-hidden">
+                  <div className="text-6xl opacity-80 group-hover:scale-110 transition-all duration-500">
+                    ✨
+                  </div>
+                </div>
+
+                <div className="p-8">
+                  <h3 className="text-2xl font-black mb-4">
+                    Motion Graphics
+                  </h3>
+
+                  <p className="text-gray-400 leading-relaxed mb-8">
+                    Animated titles, transitions, visual effects, motion elements, and creative graphics.
+                  </p>
+
+                  <div className="flex justify-between items-center">
+                    <span className="text-red-400 border border-red-800/70 px-4 py-2 rounded-full text-sm font-semibold">
+                      Animation
+                    </span>
+
+                    <a
+                      href="https://drive.google.com/drive/folders/1n-_g7ih8L5zIs0F59VmAc52om74AyA4q?usp=drive_link"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-white font-bold group-hover:text-red-500 transition-all"
+                    >
+                      View Collection →
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeCategory === "design" && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="group rounded-3xl overflow-hidden bg-[#0b0b0b] border border-red-950/60 hover:border-red-600/80 shadow-[0_0_25px_rgba(0,0,0,0.8)] hover:shadow-[0_0_35px_rgba(255,0,0,0.25)] transition-all duration-500 hover:-translate-y-3">
+                <div className="h-64 bg-gradient-to-br from-red-950 via-black to-[#1a1a1a] flex items-center justify-center overflow-hidden">
+                  <div className="text-6xl opacity-80 group-hover:scale-110 transition-all duration-500">
+                    🎨
+                  </div>
+                </div>
+
+                <div className="p-8">
+                  <h3 className="text-2xl font-black mb-4">
+                    Brand Design
+                  </h3>
+
+                  <p className="text-gray-400 leading-relaxed mb-8">
+                    Logos, identity concepts, and visual branding materials for creative projects.
+                  </p>
+
+                  <div className="flex justify-between items-center">
+                    <span className="text-red-400 border border-red-800/70 px-4 py-2 rounded-full text-sm font-semibold">
+                      Branding
+                    </span>
+
+                    <a
+                      href="https://drive.google.com/drive/folders/1QZVwmrtODmYrWs2S2TGPghnhk1PsKaaX?usp=drive_link"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-white font-bold group-hover:text-red-500 transition-all"
+                    >
+                      View Collection →
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div className="group rounded-3xl overflow-hidden bg-[#0b0b0b] border border-red-950/60 hover:border-red-600/80 shadow-[0_0_25px_rgba(0,0,0,0.8)] hover:shadow-[0_0_35px_rgba(255,0,0,0.25)] transition-all duration-500 hover:-translate-y-3">
+                <div className="h-64 bg-gradient-to-br from-red-900/60 via-black to-[#1a1a1a] flex items-center justify-center overflow-hidden">
+                  <div className="text-6xl opacity-80 group-hover:scale-110 transition-all duration-500">
+                    📱
+                  </div>
+                </div>
+
+                <div className="p-8">
+                  <h3 className="text-2xl font-black mb-4">
+                    Social Media Design
+                  </h3>
+
+                  <p className="text-gray-400 leading-relaxed mb-8">
+                    Posters, posts, banners, and promotional graphics for online platforms.
+                  </p>
+
+                  <div className="flex justify-between items-center">
+                    <span className="text-red-400 border border-red-800/70 px-4 py-2 rounded-full text-sm font-semibold">
+                      Social Media
+                    </span>
+
+                    <a
+                      href="https://drive.google.com/drive/folders/1lkMB130a2I3SvwfrwQRp-JYnEYJcr5jh?usp=drive_link"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-white font-bold group-hover:text-red-500 transition-all"
+                    >
+                      View Collection →
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div className="group rounded-3xl overflow-hidden bg-[#0b0b0b] border border-red-950/60 hover:border-red-600/80 shadow-[0_0_25px_rgba(0,0,0,0.8)] hover:shadow-[0_0_35px_rgba(255,0,0,0.25)] transition-all duration-500 hover:-translate-y-3">
+                <div className="h-64 bg-gradient-to-br from-red-950 via-[#120000] to-black flex items-center justify-center overflow-hidden">
+                  <div className="text-6xl opacity-80 group-hover:scale-110 transition-all duration-500">
+                    🖼️
+                  </div>
+                </div>
+
+                <div className="p-8">
+                  <h3 className="text-2xl font-black mb-4">
+                    Poster & Layout Design
+                  </h3>
+
+                  <p className="text-gray-400 leading-relaxed mb-8">
+                    Event posters, layout designs, presentations, and creative publication materials.
+                  </p>
+
+                  <div className="flex justify-between items-center">
+                    <span className="text-red-400 border border-red-800/70 px-4 py-2 rounded-full text-sm font-semibold">
+                      Layout
+                    </span>
+
+                    <a
+                      href="https://drive.google.com/drive/folders/1P3Gkxn88peH0MSepx8S7W-rk9wM5CEd8?usp=drive_link"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-white font-bold group-hover:text-red-500 transition-all"
+                    >
+                      View Collection →
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+      
         <section id="services" className="min-h-screen px-12 py-28 bg-[#080808]">
           <div className="max-w-screen-2xl mx-auto">
             <h2 className="text-5xl font-black mb-6">Services</h2>
