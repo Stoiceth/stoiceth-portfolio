@@ -46,7 +46,7 @@ function App() {
         id="home"
         className="relative min-h-screen pt-24 lg:pt-20 flex items-center overflow-hidden"
       >
-        <div className="relative z-10 max-w-screen-2xl mx-auto px-6 md:px-12 w-full min-h-[calc(100vh-80px)] flex items-center">
+        <div className="relative z-10 max-w-screen-2xl mx-auto px-6 md:px-12 w-full min-h-[calc(100vh-80px)] flex flex-col lg:flex-row items-center justify-between">
           <div className="relative w-full">
             
             <div className="absolute right-[-50px] top-[0px] w-[800px] h-[500px] rounded-full bg-red-600/30 blur-[120px] z-0"></div>
@@ -57,11 +57,11 @@ function App() {
 
             <div className="relative z-20 max-w-none">
               <h1 className="font-black uppercase leading-[0.9] tracking-tight text-[8rem] md:text-[10rem]">
-                <span className="block text-[4.5rem] sm:text-[5rem] md:text-[7rem]">  
+                <span className="block text-[3rem] sm:text-[5rem] md:text-[7rem]">
                   Freelance
                 </span>
 
-                <span className="block text-[3.7rem] sm:text-[4rem] md:text-[5.2rem] whitespace-nowrap">
+                <span className="block text-[2.2rem] sm:text-[4rem] md:text-[5.2rem] leading-none">
                   <span
                     className="text-red-600"
                     style={{
@@ -83,35 +83,35 @@ function App() {
                 Helping creators and brands tell stories through cinematic editing.
               </p>
 
-              <div className="flex flex-wrap gap-6">
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 w-full sm:w-auto">
                 <a
                   href="#works"
-                  className="bg-red-600 hover:bg-red-700 px-8 py-4 md:px-15 md:py-6 rounded-full font-bold shadow-[0_0_25px_rgba(255,0,0,0.4)] hover:shadow-[0_0_40px_rgba(255,0,0,0.7)] transition-all duration-300 hover:scale-105"
+                  className="w-full sm:w-fit text-center bg-red-600 hover:bg-red-700 px-8 py-4 md:px-15 md:py-6 rounded-full font-bold shadow-[0_0_25px_rgba(255,0,0,0.4)] hover:shadow-[0_0_40px_rgba(255,0,0,0.7)] transition-all duration-300 hover:scale-105"
                 >
                   View Works
                 </a>
 
                 <a
                   href="#contact"
-                  className="bg-black hover:bg-red-950/60 px-8 py-4 md:px-15 md:py-6 rounded-full font-bold border border-white/10 hover:border-red-600 shadow-[0_0_20px_rgba(0,0,0,0.7)] transition-all duration-300 hover:scale-105"
+                  className="w-full sm:w-fit text-center bg-black hover:bg-red-950/60 px-8 py-4 md:px-15 md:py-6 rounded-full font-bold border border-white/10 hover:border-red-600 shadow-[0_0_20px_rgba(0,0,0,0.7)] transition-all duration-300 hover:scale-105"
                 >
                   Get in Touch
                 </a>
               </div>
             </div>
 
-            <div className="absolute right-[-25px] bottom-[-140px] z-30">
+            <div className="relative lg:absolute lg:right-[-25px] lg:bottom-[-140px] mt-12 lg:mt-0 z-30 flex justify-center">
               <img
                 src="/images/zeth.png"
                 alt="Stoiceth"
-                className="relative z-10 w-[320px] sm:w-[420px] md:w-[560px] lg:w-[700px] object-contain hover:scale-105 transition-all duration-500 animate-[float_6s_ease-in-out_infinite]"
+                className="relative z-10 w-[260px] sm:w-[340px] md:w-[480px] lg:w-[700px] object-contain hover:scale-105 transition-all duration-500 animate-[float_6s_ease-in-out_infinite]"
               />
             </div>
 
           </div>
         </div>
 
-        <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-50 text-xs md:text-base uppercase tracking-widest text-gray-200 text-center whitespace-nowrap">
+        <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-50 text-[10px] sm:text-xs md:text-base uppercase tracking-wide md:tracking-widest text-gray-200 text-center px-4">
           Video Editor • Filmmaker • Content Creator
         </div>
 
@@ -800,7 +800,7 @@ function App() {
           </div>
         </section>
 
-        <section id="contact" className="min-h-screen px-12 py-28 bg-[#080808]">
+        <section id="contact" className="min-h-screen px-6 md:px-12 py-28 bg-[#080808]">
           <div className="max-w-screen-2xl mx-auto">
             <h2 className="text-5xl font-black mb-6">
               Contact
