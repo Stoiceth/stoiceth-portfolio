@@ -107,11 +107,25 @@ function App() {
 
             <div className="relative z-20 max-w-none">
               <h1 className="font-black uppercase leading-[0.9] tracking-tight text-[8rem] md:text-[10rem]">
-                <span className="block text-[3rem] sm:text-[5rem] md:text-[7rem]">
+                <span className="block text-[2.5rem] sm:text-[4rem] lg:text-[6rem] xl:text-[7rem]">
                   Freelance
                 </span>
 
-                <span className="block text-[2.2rem] sm:text-[4rem] md:text-[5.2rem] leading-none">
+                <span
+                  className="block md:hidden text-[3.2rem] font-black text-red-600"
+                  style={{
+                    textShadow: `
+                      1px 1px 0 #fff,
+                      2px 2px 0 rgba(0,0,0,.2)
+                    `,
+                  }}
+                >
+                  VIDEO EDITOR &
+                  <br />
+                  DESIGNER
+                </span>
+
+                <span className="hidden md:block text-[2.2rem] sm:text-[4rem] md:text-[5.2rem] leading-none">
                   <span
                     className="text-red-600"
                     style={{
@@ -150,11 +164,11 @@ function App() {
               </div>
             </div>
 
-            <div className="relative lg:absolute lg:right-[-25px] lg:bottom-[-140px] mt-12 lg:mt-0 z-30 flex justify-center">
+            <div className=" relative lg:absolute lg:right-0 xl:right-[-20px] lg:bottom-[-50px] xl:bottom-[-130px] mt-12 lg:mt-0 z-30 flex justify-center">
               <img
                 src="/images/zeth.png"
                 alt="Stoiceth"
-                className="relative z-10 w-[260px] sm:w-[340px] md:w-[480px] lg:w-[700px] object-contain hover:scale-105 transition-all duration-500 animate-[float_6s_ease-in-out_infinite]"
+                className="relative z-10 w-[260px] sm:w-[340px] md:w-[430px] lg:w-[42vw] xl:w-[45vw] max-w-[720px] object-contain hover:scale-105 transition-all duration-500 animate-[float_6s_ease-in-out_infinite]"
               />
             </div>
 
