@@ -1,15 +1,28 @@
 import { useState } from "react";
+
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaGithub,
+  FaTiktok,
+} from "react-icons/fa";
+
 function App() {
   const [activeCategory, setActiveCategory] = useState("video");
   const [activeServiceTab, setActiveServiceTab] = useState("services");
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   return (
     <div className="min-h-screen bg-black text-white overflow-x-hidden scroll-smooth">
       <nav className="fixed top-0 left-0 w-full z-50 bg-black/90 backdrop-blur-md border-b border-white/10">
         <div className="w-full px-5 md:px-12 h-20 flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-red-700/80 shadow-[0_0_25px_rgba(220,38,38,0.5)]"></div>
+          <div className="flex items-center gap-4 md:gap-5">
+            <img
+              src="/images/logo.jpg"
+              alt="Stoiceth"
+              className="w-11 h-11 md:w-14 md:h-14 rounded-full object-cover border border-red-900 shadow-[0_0_20px_rgba(239,68,68,0.5)] hover:scale-105 transition-all duration-300"
+            />
 
-            <h1 className="text-lg md:text-2xl font-black tracking-[4px] md:tracking-[6px]">
+            <h1 className="text-base sm:text-lg md:text-2xl font-black tracking-[3px] sm:tracking-[4px] md:tracking-[6px]">
               STOI
               <span className="text-red-500 drop-shadow-[0_0_10px_rgba(239,68,68,0.8)]">
                 C
@@ -35,11 +48,48 @@ function App() {
 
           <a
             href="#contact"
-            className="bg-red-600 hover:bg-red-700 px-5 md:px-8 py-3 rounded-full font-semibold shadow-[0_0_25px_rgba(255,0,0,0.4)] hover:shadow-[0_0_40px_rgba(255,0,0,0.7)] transition-all duration-300 hover:scale-105"
+            className="hidden md:inline-flex bg-red-600 hover:bg-red-700 px-5 md:px-8 py-3 rounded-full font-semibold shadow-[0_0_25px_rgba(255,0,0,0.4)] hover:shadow-[0_0_40px_rgba(255,0,0,0.7)] transition-all duration-300 hover:scale-105"
           >
             Contact
           </a>
+
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="md:hidden w-11 h-11 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-2xl hover:border-red-600 hover:text-red-500 transition-all"
+          >
+            {isMenuOpen ? "×" : "☰"}
+          </button>
         </div>
+
+        {isMenuOpen && (
+          <div className="md:hidden px-5 pb-6 bg-black/95 border-t border-white/10">
+            <div className="flex flex-col gap-4 pt-5 text-sm uppercase tracking-widest">
+              <a onClick={() => setIsMenuOpen(false)} href="#home" className="text-gray-300 hover:text-red-500 transition-all">
+                Home
+              </a>
+
+              <a onClick={() => setIsMenuOpen(false)} href="#works" className="text-gray-300 hover:text-red-500 transition-all">
+                Works
+              </a>
+
+              <a onClick={() => setIsMenuOpen(false)} href="#services" className="text-gray-300 hover:text-red-500 transition-all">
+                Services
+              </a>
+
+              <a onClick={() => setIsMenuOpen(false)} href="#about" className="text-gray-300 hover:text-red-500 transition-all">
+                About
+              </a>
+
+              <a
+                onClick={() => setIsMenuOpen(false)}
+                href="#contact"
+                className="mt-3 text-center bg-red-600 hover:bg-red-700 px-5 py-3 rounded-full font-bold shadow-[0_0_25px_rgba(255,0,0,0.4)] transition-all"
+              >
+                Contact
+              </a>
+            </div>
+          </div>
+        )}
       </nav>
 
       <section
@@ -112,7 +162,7 @@ function App() {
         </div>
 
         <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-50 text-[10px] sm:text-xs md:text-base uppercase tracking-wide md:tracking-widest text-gray-200 text-center px-4">
-          Video Editor • Filmmaker • Content Creator
+          Video Editor • Designer • Filmmaker
         </div>
 
         
@@ -165,11 +215,15 @@ function App() {
           {activeCategory === "video" && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="group rounded-3xl overflow-hidden bg-[#0b0b0b] border border-red-950/60 hover:border-red-600/80 shadow-[0_0_25px_rgba(0,0,0,0.8)] hover:shadow-[0_0_35px_rgba(255,0,0,0.25)] transition-all duration-500 hover:-translate-y-3">
-                <div className="h-64 bg-gradient-to-br from-red-950 via-black to-[#1a1a1a] flex items-center justify-center overflow-hidden">
-                  <div className="text-6xl opacity-80 group-hover:scale-110 transition-all duration-500">
-                    🎬
-                  </div>
-                </div>
+                <div className="h-64 overflow-hidden relative">
+                <img
+                  src="/images/works/video-projects.jpg"
+                  alt="Video Projects"
+                  className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
+              </div>
 
                 <div className="p-8">
                   <h3 className="text-2xl font-black mb-4">
@@ -198,10 +252,14 @@ function App() {
               </div>
 
               <div className="group rounded-3xl overflow-hidden bg-[#0b0b0b] border border-red-950/60 hover:border-red-600/80 shadow-[0_0_25px_rgba(0,0,0,0.8)] hover:shadow-[0_0_35px_rgba(255,0,0,0.25)] transition-all duration-500 hover:-translate-y-3">
-                <div className="h-64 bg-gradient-to-br from-red-900/60 via-black to-[#1a1a1a] flex items-center justify-center overflow-hidden">
-                  <div className="text-6xl opacity-80 group-hover:scale-110 transition-all duration-500">
-                    📱
-                  </div>
+                <div className="h-64 overflow-hidden relative">
+                  <img
+                    src="/images/works/reels.jpg"
+                    alt="Reels"
+                    className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
+                  />
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
                 </div>
 
                 <div className="p-8">
@@ -231,10 +289,14 @@ function App() {
               </div>
 
               <div className="group rounded-3xl overflow-hidden bg-[#0b0b0b] border border-red-950/60 hover:border-red-600/80 shadow-[0_0_25px_rgba(0,0,0,0.8)] hover:shadow-[0_0_35px_rgba(255,0,0,0.25)] transition-all duration-500 hover:-translate-y-3">
-                <div className="h-64 bg-gradient-to-br from-red-950 via-[#120000] to-black flex items-center justify-center overflow-hidden">
-                  <div className="text-6xl opacity-80 group-hover:scale-110 transition-all duration-500">
-                    ✨
-                  </div>
+                <div className="h-64 overflow-hidden relative">
+                  <img
+                    src="/images/works/motion.jpg"
+                    alt="Motion Graphics"
+                    className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
+                  />
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
                 </div>
 
                 <div className="p-8">
@@ -268,12 +330,16 @@ function App() {
           {activeCategory === "design" && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="group rounded-3xl overflow-hidden bg-[#0b0b0b] border border-red-950/60 hover:border-red-600/80 shadow-[0_0_25px_rgba(0,0,0,0.8)] hover:shadow-[0_0_35px_rgba(255,0,0,0.25)] transition-all duration-500 hover:-translate-y-3">
-                <div className="h-64 bg-gradient-to-br from-red-950 via-black to-[#1a1a1a] flex items-center justify-center overflow-hidden">
-                  <div className="text-6xl opacity-80 group-hover:scale-110 transition-all duration-500">
-                    🎨
-                  </div>
-                </div>
+                <div className="h-64 overflow-hidden relative">
+                  <img
+                    src="/images/works/motion.jpg"
+                    alt="Motion Graphics"
+                    className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
+                  />
 
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
+                </div>
+                
                 <div className="p-8">
                   <h3 className="text-2xl font-black mb-4">
                     Brand Design
@@ -301,10 +367,14 @@ function App() {
               </div>
 
               <div className="group rounded-3xl overflow-hidden bg-[#0b0b0b] border border-red-950/60 hover:border-red-600/80 shadow-[0_0_25px_rgba(0,0,0,0.8)] hover:shadow-[0_0_35px_rgba(255,0,0,0.25)] transition-all duration-500 hover:-translate-y-3">
-                <div className="h-64 bg-gradient-to-br from-red-900/60 via-black to-[#1a1a1a] flex items-center justify-center overflow-hidden">
-                  <div className="text-6xl opacity-80 group-hover:scale-110 transition-all duration-500">
-                    📱
-                  </div>
+                <div className="h-64 overflow-hidden relative">
+                  <img
+                    src="/images/works/social.jpg"
+                    alt="Social Media"
+                    className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
+                  />
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
                 </div>
 
                 <div className="p-8">
@@ -334,10 +404,14 @@ function App() {
               </div>
 
               <div className="group rounded-3xl overflow-hidden bg-[#0b0b0b] border border-red-950/60 hover:border-red-600/80 shadow-[0_0_25px_rgba(0,0,0,0.8)] hover:shadow-[0_0_35px_rgba(255,0,0,0.25)] transition-all duration-500 hover:-translate-y-3">
-                <div className="h-64 bg-gradient-to-br from-red-950 via-[#120000] to-black flex items-center justify-center overflow-hidden">
-                  <div className="text-6xl opacity-80 group-hover:scale-110 transition-all duration-500">
-                    🖼️
-                  </div>
+                <div className="h-64 overflow-hidden relative">
+                  <img
+                    src="/images/works/poster.jpg"
+                    alt="Poster Design"
+                    className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
+                  />
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
                 </div>
 
                 <div className="p-8">
@@ -800,15 +874,195 @@ function App() {
           </div>
         </section>
 
-        <section id="contact" className="min-h-screen px-6 md:px-12 py-28 bg-[#080808]">
-          <div className="max-w-screen-2xl mx-auto">
-            <h2 className="text-5xl font-black mb-6">
-              Contact
-            </h2>
+        <section id="contact" className="relative min-h-screen px-6 md:px-12 pt-36 pb-28 bg-black overflow-hidden">
+          <div className="absolute left-[-250px] top-[120px] w-[600px] h-[600px] rounded-full bg-red-600/20 blur-[160px] animate-[pulse_8s_ease-in-out_infinite]"></div>
+          <div className="absolute right-[-250px] bottom-[80px] w-[600px] h-[600px] rounded-full bg-red-600/10 blur-[160px] animate-[pulse_10s_ease-in-out_infinite]"></div>
 
-            <p className="text-gray-400">
-              My contact details or contact form will go here.
-            </p>
+          <div className="relative z-10 max-w-screen-2xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-14 items-center">
+              
+              <div className="space-y-8">
+                <div className="inline-flex items-center gap-3 text-green-400 text-sm font-bold">
+                  <span className="relative flex h-3 w-3">
+                    <span className="absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75 animate-ping"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-green-400"></span>
+                  </span>
+                  Available for Freelance
+                </div>
+
+                <div>
+                  <p className="text-red-500 uppercase tracking-[6px] text-sm font-bold mb-5">
+                    Contact
+                  </p>
+
+                  <h2 className="text-5xl md:text-7xl font-black uppercase leading-[0.9] mb-6">
+                    Let's Work
+                    <br />
+                    Together.
+                  </h2>
+
+                  <p className="text-white text-xl md:text-2xl font-black max-w-xl mb-5">
+                    Your next project deserves more than just edits.
+                    <br />
+                    It deserves a story.
+                  </p>
+
+                  <p className="text-gray-400 text-base md:text-lg leading-relaxed max-w-xl">
+                    Have a project in mind or want to collaborate? I'm open for video editing,
+                    graphic design, creative projects, and freelance opportunities.
+                  </p>
+                </div>
+
+                <p className="italic text-gray-400 text-lg">
+                  “Turning ideas into visuals that people remember.”
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-xl">
+                  <div className="bg-white/5 border border-red-950/60 rounded-2xl p-5 hover:border-red-600 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(255,0,0,0.15)] transition-all duration-300">
+                    <h3 className="text-2xl font-black text-red-500">6+</h3>
+                    <p className="text-gray-400 text-sm">Years Editing</p>
+                  </div>
+
+                  <div className="bg-white/5 border border-red-950/60 rounded-2xl p-5 hover:border-red-600 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(255,0,0,0.15)] transition-all duration-300">
+                    <h3 className="text-2xl font-black text-red-500">2020</h3>
+                    <p className="text-gray-400 text-sm">Started</p>
+                  </div>
+
+                  <div className="bg-white/5 border border-red-950/60 rounded-2xl p-5 hover:border-red-600 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(255,0,0,0.15)] transition-all duration-300">
+                    <h3 className="text-2xl font-black text-red-500">24h</h3>
+                    <p className="text-gray-400 text-sm">Response</p>
+                  </div>
+                </div>
+
+                <a
+                  href="mailto:zethlaurencemanalo@gmail.com"
+                  className="group relative inline-flex items-center gap-3 overflow-hidden bg-red-600 hover:bg-red-700 px-8 py-4 rounded-full font-bold shadow-[0_0_25px_rgba(255,0,0,0.4)] hover:shadow-[0_0_50px_rgba(255,0,0,0.75)] transition-all duration-300 hover:scale-105"
+                >
+                  <span className="absolute inset-0 bg-white/20 translate-x-[-120%] group-hover:translate-x-[120%] transition-transform duration-700 skew-x-12"></span>
+                  <span className="relative z-10">Start a Project</span>
+                  <span className="relative z-10 group-hover:translate-x-1 transition-transform duration-300">→</span>
+                </a>
+              </div>
+
+              <div className="bg-[#0b0b0b] border border-red-950/60 rounded-3xl p-6 md:p-8 shadow-[0_0_35px_rgba(255,0,0,0.12)] hover:border-red-600/60 hover:-translate-y-2 hover:shadow-[0_0_45px_rgba(255,0,0,0.18)] transition-all duration-500">
+                <div className="space-y-5">
+                  
+                  <div className="group flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-5">
+                    <div>
+                      <p className="text-red-500 uppercase tracking-[4px] text-xs font-bold mb-2">
+                        Email
+                      </p>
+
+                      <div className="inline-block">
+                        <h3 className="text-xl md:text-2xl font-black break-all">
+                          zethlaurencemanalo@gmail.com
+                        </h3>
+                        <div className="w-0 h-[2px] bg-red-500 group-hover:w-full transition-all duration-500"></div>
+                      </div>
+                    </div>
+
+                    <a
+                      href="mailto:zethlaurencemanalo@gmail.com"
+                      className="text-gray-400 group-hover:text-red-500 transition-all"
+                    >
+                      Email Me →
+                    </a>
+                  </div>
+
+                  <div className="group flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-5 hover:pl-2 transition-all duration-300">
+                    <div>
+                      <p className="text-red-500 uppercase tracking-[4px] text-xs font-bold mb-2">
+                        Location
+                      </p>
+                      <h3 className="text-xl md:text-2xl font-black">
+                        Philippines
+                      </h3>
+                    </div>
+
+                    <p className="text-gray-400">
+                      Available remotely
+                    </p>
+                  </div>
+
+                  <div className="group flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-5 hover:pl-2 transition-all duration-300">
+                    <div>
+                      <p className="text-red-500 uppercase tracking-[4px] text-xs font-bold mb-2">
+                        Availability
+                      </p>
+                      <h3 className="text-xl md:text-2xl font-black">
+                        Open for Freelance
+                      </h3>
+                    </div>
+
+                    <p className="text-gray-400">
+                      Projects & collaborations
+                    </p>
+                  </div>
+
+                  <div className="group flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 hover:pl-2 transition-all duration-300">
+                    <div>
+                      <p className="text-red-500 uppercase tracking-[4px] text-xs font-bold mb-2">
+                        Response
+                      </p>
+                      <h3 className="text-xl md:text-2xl font-black">
+                        Within 24 Hours
+                      </h3>
+                    </div>
+
+                    <p className="text-gray-400">
+                      Usually active online
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-10 pt-8 border-t border-white/10">
+                  <p className="text-gray-400 mb-5">
+                    Connect with me
+                  </p>
+
+                  <div className="flex flex-wrap gap-4">
+                    {[
+                      {
+                        icon: <FaFacebookF />,
+                        link: "https://facebook.com/yourprofile",
+                      },
+                      {
+                        icon: <FaTiktok />,
+                        link: "https://tiktok.com/@yourprofile",
+                      },
+                      {
+                        icon: <FaInstagram />,
+                        link: "https://instagram.com/yourprofile",
+                      },
+                    ].map((item, index) => (
+                      <a
+                        key={index}
+                        href={item.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-12 h-12 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-xl hover:border-red-600 hover:text-red-500 hover:scale-110 hover:rotate-6 hover:shadow-[0_0_20px_rgba(255,0,0,0.25)] transition-all duration-300"
+                      >
+                        {item.icon}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <footer className="mt-24 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between gap-4 text-gray-500 text-sm">
+              <p className="font-bold tracking-[4px] text-white">
+                STOI<span className="text-red-500">C</span>ETH
+              </p>
+
+              <p>
+                © 2026 Stoiceth. All rights reserved.
+              </p>
+
+              <p>
+                Video Editor • Designer • Filmmaker
+              </p>
+            </footer>
           </div>
         </section>
     </div>
