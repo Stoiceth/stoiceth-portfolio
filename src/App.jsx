@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   FaFacebookF,
@@ -11,44 +11,107 @@ function App() {
   const [activeCategory, setActiveCategory] = useState("video");
   const [activeServiceTab, setActiveServiceTab] = useState("services");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [shineStyle, setShineStyle] = useState({left: "-20%", duration: 2,});
+  const [activeSection, setActiveSection] = useState("home");
+  
+useEffect(() => {
+  const randomShine = () => {
+    const randomDelay = Math.random() * 7000 + 4000; // 4s - 11s
+
+    setTimeout(() => {
+      setShineStyle({
+        left: `${Math.floor(Math.random() * 80) - 20}%`,
+        duration: Math.random() * 1.5 + 1.5, // 1.5s - 3s
+      });
+
+      randomShine();
+    }, randomDelay);
+  };
+
+  randomShine();
+}, []);
+
+useEffect(() => {
+  const sections = ["home", "works", "services", "about", "contact"];
+
+  const handleScroll = () => {
+    sections.forEach((section) => {
+      const element = document.getElementById(section);
+
+      if (element) {
+        const rect = element.getBoundingClientRect();
+
+        if (rect.top <= 150 && rect.bottom >= 150) {
+          setActiveSection(section);
+        }
+      }
+    });
+  };
+
+  window.addEventListener("scroll", handleScroll);
+  handleScroll();
+
+  return () => window.removeEventListener("scroll", handleScroll);
+}, []);
+
+  const navLinkClass = (section) =>
+    `relative transition-all duration-300 hover:-translate-y-1 ${
+      activeSection === section
+        ? "text-red-500 drop-shadow-[0_0_10px_rgba(239,68,68,0.9)] after:w-full"
+        : "text-gray-300 hover:text-red-500 after:w-0"
+    } after:content-[''] after:absolute after:left-0 after:-bottom-2 after:h-[2px] after:bg-red-500 after:transition-all after:duration-300 hover:after:w-full`;
+
   return (
     <div className="min-h-screen bg-black text-white overflow-x-hidden scroll-smooth">
-      <nav className="fixed top-0 left-0 w-full z-50 bg-black/90 backdrop-blur-md border-b border-white/10">
-        <div className="w-full px-5 md:px-12 h-20 flex justify-between items-center">
-          <div className="flex items-center gap-4 md:gap-5">
+      <nav className="fixed top-5 left-0 w-full z-50 px-4 md:px-8 animate-[navDrop_0.8s_ease-out]">
+        <div className="group relative max-w-7xl mx-auto h-20 px-4 md:px-6 flex justify-between items-center rounded-full overflow-hidden bg-black/35 backdrop-blur-2xl border border-white/15 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_0_35px_rgba(0,0,0,0.5)] hover:border-red-500/40 transition-all duration-300">
+  
+        <span className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/15 to-transparent translate-x-[-120%] group-hover:translate-x-[120%] transition-transform duration-1000"></span>
+
+        <span className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-b from-white/10 via-transparent to-transparent"></span>
+
+        <span
+          key={shineStyle.left}
+          className="pointer-events-none absolute inset-y-0 w-32 bg-gradient-to-r from-transparent via-white/20 to-transparent blur-md animate-[glassMove_var(--duration)_ease-in-out]"
+          style={{
+            left: shineStyle.left,
+            "--duration": `${shineStyle.duration}s`,
+          }}
+        ></span>
+
+          <div className="flex items-center gap-4">
             <img
               src="/images/logo.jpg"
               alt="Stoiceth"
-              className="w-11 h-11 md:w-14 md:h-14 rounded-full object-cover border border-red-900 shadow-[0_0_20px_rgba(239,68,68,0.5)] hover:scale-105 transition-all duration-300"
+              className="w-11 h-11 md:w-12 md:h-12 rounded-full object-cover border border-red-900 shadow-[0_0_20px_rgba(239,68,68,0.5)] hover:scale-105 transition-all duration-300"
             />
 
-            <h1 className="text-base sm:text-lg md:text-2xl font-black tracking-[3px] sm:tracking-[4px] md:tracking-[6px]">
-              STOI
-              <span className="text-red-500 drop-shadow-[0_0_10px_rgba(239,68,68,0.8)]">
-                C
-              </span>
-              ETH
+            <h1 className="text-base sm:text-lg md:text-2xl font-black tracking-[3px] md:tracking-[6px]">
+              STOI<span className="text-red-500 drop-shadow-[0_0_10px_rgba(239,68,68,0.8)]">C</span>ETH
             </h1>
           </div>
 
-          <div className="hidden md:flex gap-12 text-sm uppercase tracking-wider">
-            <a href="#home" className="text-gray-300 hover:text-red-500 hover:-translate-y-1 transition-all duration-300">
+          <div className="hidden md:flex gap-10 text-sm uppercase tracking-wider">
+            <a href="#home" className={navLinkClass("home")}>
               Home
             </a>
-            <a href="#works" className="text-gray-300 hover:text-red-500 hover:-translate-y-1 transition-all duration-300">
+
+            <a href="#works" className={navLinkClass("works")}>
               Works
             </a>
-            <a href="#services" className="text-gray-300 hover:text-red-500 hover:-translate-y-1 transition-all duration-300">
+
+            <a href="#services" className={navLinkClass("services")}>
               Services
             </a>
-            <a href="#about" className="text-gray-300 hover:text-red-500 hover:-translate-y-1 transition-all duration-300">
+
+            <a href="#about" className={navLinkClass("about")}>
               About
             </a>
           </div>
 
           <a
             href="#contact"
-            className="hidden md:inline-flex bg-red-600 hover:bg-red-700 px-5 md:px-8 py-3 rounded-full font-semibold shadow-[0_0_25px_rgba(255,0,0,0.4)] hover:shadow-[0_0_40px_rgba(255,0,0,0.7)] transition-all duration-300 hover:scale-105"
+            className="hidden md:inline-flex bg-red-600 hover:bg-red-700 px-8 py-3 rounded-full font-semibold shadow-[0_0_25px_rgba(255,0,0,0.4)] hover:shadow-[0_0_40px_rgba(255,0,0,0.7)] transition-all duration-300 hover:scale-105"
           >
             Contact
           </a>
@@ -61,33 +124,73 @@ function App() {
           </button>
         </div>
 
-        {isMenuOpen && (
-          <div className="md:hidden px-5 pb-6 bg-black/95 border-t border-white/10">
-            <div className="flex flex-col gap-4 pt-5 text-sm uppercase tracking-widest">
-              <a onClick={() => setIsMenuOpen(false)} href="#home" className="text-gray-300 hover:text-red-500 transition-all">
+       {isMenuOpen && (
+          <div className="md:hidden max-w-5xl mx-auto mt-3 px-5 py-6 bg-black/95 border border-white/10 rounded-3xl shadow-[0_0_35px_rgba(0,0,0,0.7)] backdrop-blur-md">
+
+            <div className="flex flex-col gap-4 text-sm uppercase tracking-widest">
+
+              <a
+                onClick={() => setIsMenuOpen(false)}
+                href="#home"
+                className={
+                  activeSection === "home"
+                    ? "text-red-500 font-bold"
+                    : "text-gray-300 hover:text-red-500 transition-all"
+                }
+              >
                 Home
               </a>
 
-              <a onClick={() => setIsMenuOpen(false)} href="#works" className="text-gray-300 hover:text-red-500 transition-all">
+              <a
+                onClick={() => setIsMenuOpen(false)}
+                href="#works"
+                className={
+                  activeSection === "works"
+                    ? "text-red-500 font-bold"
+                    : "text-gray-300 hover:text-red-500 transition-all"
+                }
+              >
                 Works
               </a>
 
-              <a onClick={() => setIsMenuOpen(false)} href="#services" className="text-gray-300 hover:text-red-500 transition-all">
+              <a
+                onClick={() => setIsMenuOpen(false)}
+                href="#services"
+                className={
+                  activeSection === "services"
+                    ? "text-red-500 font-bold"
+                    : "text-gray-300 hover:text-red-500 transition-all"
+                }
+              >
                 Services
               </a>
 
-              <a onClick={() => setIsMenuOpen(false)} href="#about" className="text-gray-300 hover:text-red-500 transition-all">
+              <a
+                onClick={() => setIsMenuOpen(false)}
+                href="#about"
+                className={
+                  activeSection === "about"
+                    ? "text-red-500 font-bold"
+                    : "text-gray-300 hover:text-red-500 transition-all"
+                }
+              >
                 About
               </a>
 
               <a
                 onClick={() => setIsMenuOpen(false)}
                 href="#contact"
-                className="mt-3 text-center bg-red-600 hover:bg-red-700 px-5 py-3 rounded-full font-bold shadow-[0_0_25px_rgba(255,0,0,0.4)] transition-all"
+                className={`mt-3 text-center px-5 py-3 rounded-full font-bold shadow-[0_0_25px_rgba(255,0,0,0.4)] transition-all ${
+                  activeSection === "contact"
+                    ? "bg-red-700 text-white"
+                    : "bg-red-600 hover:bg-red-700"
+                }`}
               >
                 Contact
               </a>
+
             </div>
+
           </div>
         )}
       </nav>
@@ -131,9 +234,7 @@ function App() {
                     style={{
                       textShadow: `
                         1px 1px 0 #fff,
-                        2px 2px 0 #fff,
-                        3px 3px 0 #fff,
-                        4px 4px 0 rgba(0,0,0,.25)
+                        2px 2px 0 rgba(0,0,0,.2)
                       `,
                     }}
                   >
@@ -871,7 +972,7 @@ function App() {
                   <a
                     href="/resume.pdf"
                     target="_blank"
-                    className="bg-red-600 hover:bg-red-700 px-8 py-4 rounded-full font-bold shadow-[0_0_25px_rgba(255,0,0,0.4)] hover:shadow-[0_0_40px_rgba(255,0,0,0.7)] transition-all duration-300 hover:scale-105"
+                    className="bg-red-600 hover:bg-red-700 px-8 py-4 rounded-full font-bold shadow-[0_0_25px_rgba(255,0,0,0.4)] hover:shadow-[0_0_40px_rgba(255,0,0,0.7)] transition-all duration-300 hover:scale-105 "
                   >
                     Download Resume
                   </a>

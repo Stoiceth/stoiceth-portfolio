@@ -8,3 +8,27 @@
     transform: translateY(-10px);
   }
 }
+
+.glass-shine {
+  animation: glassShine 8s ease-in-out infinite;
+}
+
+@keyframes glassMove {
+  from {
+    transform: translateX(-150%) skewX(-25deg);
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 0.25;
+  }
+
+  80% {
+    opacity: 0.25;
+  }
+
+  to {
+    transform: translateX(900%) skewX(-25deg);
+    opacity: 0;
+  }
+}
