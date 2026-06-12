@@ -23,7 +23,7 @@
     opacity: 0.25;
   }
 
-  80% {
+  50% {
     opacity: 0.25;
   }
 
@@ -31,4 +31,97 @@
     transform: translateX(900%) skewX(-25deg);
     opacity: 0;
   }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes heroFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroImageReveal {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes heroGlow {
+  from {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulseC {
+  0%, 100% {
+    transform: scale(1);
+    text-shadow: 0 0 20px rgba(239, 68, 68, 0.8);
+  }
+
+  50% {
+    transform: scale(1.18);
+    text-shadow: 0 0 45px rgba(239, 68, 68, 1);
+  }
+}
+
+@keyframes introSlideUp {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(-100%);
+    visibility: hidden;
+  }
+}
+
+@keyframes loadBar {
+  from {
+    width: 0%;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes introSlideUp {
+
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(-100%);
+    visibility: hidden;
+  }
+
 }

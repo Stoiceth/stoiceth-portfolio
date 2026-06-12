@@ -13,6 +13,13 @@ function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [shineStyle, setShineStyle] = useState({left: "-20%", duration: 2,});
   const [activeSection, setActiveSection] = useState("home");
+  const [spotlight, setSpotlight] = useState({x: 50, y: 50, active: false,});
+  const [darkMode, setDarkMode] = useState(true);
+  const [parallax, setParallax] = useState({x: 0, y: 0,});
+  const [mouseGlow, setMouseGlow] = useState({x: 0, y: 0,});
+  const [showIntro, setShowIntro] = useState(true);
+  const [typedLogo, setTypedLogo] = useState("");
+  const [loadingStage, setLoadingStage] = useState("PREPARING EXPERIENCE");
   
 useEffect(() => {
   const randomShine = () => {
@@ -20,7 +27,7 @@ useEffect(() => {
 
     setTimeout(() => {
       setShineStyle({
-        left: `${Math.floor(Math.random() * 80) - 20}%`,
+        left: `${Math.floor(Math.random() * 50) - 20}%`,
         duration: Math.random() * 1.5 + 1.5, // 1.5s - 3s
       });
 
@@ -61,8 +68,121 @@ useEffect(() => {
         : "text-gray-300 hover:text-red-500 after:w-0"
     } after:content-[''] after:absolute after:left-0 after:-bottom-2 after:h-[2px] after:bg-red-500 after:transition-all after:duration-300 hover:after:w-full`;
 
+const animatedText = (text, extraClass = "", isRed = false) => (
+  <span className={extraClass}>
+    {text.split("").map((char, index) => (
+      <span
+        key={index}
+        className={`inline-block transition-all duration-300 hover:-translate-y-2 hover:scale-110 ${
+          char === " " ? "w-[0.35em]" : ""
+        } ${
+          isRed
+            ? "text-red-600 hover:text-white hover:drop-shadow-[0_0_14px_rgba(255,255,255,0.8)]"
+            : "text-white hover:text-red-500 hover:drop-shadow-[0_0_14px_rgba(239,68,68,0.9)]"
+        }`}
+      >
+        {char === " " ? "\u00A0" : char}
+      </span>
+    ))}
+  </span>
+);
+
+useEffect(() => {
+  const timer = setTimeout(() => {
+    setShowIntro(false);
+  }, 3200);
+
+  return () => clearTimeout(timer);
+}, []);
+
+useEffect(() => {
+  const text = "STOICETH";
+  let index = 0;
+
+  const interval = setInterval(() => {
+    setTypedLogo(text.slice(0, index + 1));
+    index++;
+
+    if (index >= text.length) {
+      clearInterval(interval);
+    }
+  }, 120);
+
+  return () => clearInterval(interval);
+}, []);
+
+useEffect(() => {
+  const first = setTimeout(() => {
+    setLoadingStage("LOADING PORTFOLIO");
+  }, 900);
+
+  const second = setTimeout(() => {
+    setLoadingStage("WELCOME");
+  }, 1900);
+
+  return () => {
+    clearTimeout(first);
+    clearTimeout(second);
+  };
+}, []);
+
   return (
-    <div className="min-h-screen bg-black text-white overflow-x-hidden scroll-smooth">
+    <div
+      className="relative min-h-screen bg-black text-white overflow-x-hidden scroll-smooth"
+      onMouseMove={(e) => {
+        setMouseGlow({
+          x: e.clientX,
+          y: e.clientY,
+        });
+      }}
+    >
+
+      {showIntro && (
+        <div className="fixed inset-0 z-[9999] bg-black flex items-center justify-center animate-[introSlideUp_0.9s_ease_2.4s_forwards]">
+          <div className="text-center">
+            <h1 className="text-5xl md:text-7xl font-black tracking-[12px] text-white">
+              {typedLogo.split("").map((char, i) =>
+                char === "C" ? (
+                  <span
+                    key={i}
+                    className="inline-block text-red-500 drop-shadow-[0_0_25px_rgba(239,68,68,0.8)] animate-[pulseC_0.45s_ease_1.2s_1]"
+                  >
+                    C
+                  </span>
+                ) : (
+                  <span key={i}>{char}</span>
+                )
+              )}
+            </h1>
+
+            <div className="mt-5 w-36 h-[2px] mx-auto bg-gradient-to-r from-transparent via-red-500 to-transparent animate-pulse"></div>
+
+            <div className="mt-10 flex flex-col items-center gap-5">
+              <p
+                key={loadingStage}
+                className="text-[11px] uppercase tracking-[8px] text-gray-400 animate-[heroFadeUp_0.4s_ease]"
+              >
+                {loadingStage}
+              </p>
+
+              <div className="w-64 h-[3px] bg-white/10 rounded-full overflow-hidden">
+                <div className="h-full bg-gradient-to-r from-red-500 to-red-400 rounded-full animate-[loadBar_2.4s_linear_forwards]"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+    <div
+    className="pointer-events-none fixed z-0 w-[500px] h-[500px] rounded-full blur-[120px]"
+      style={{
+        left: `${mouseGlow.x}px`,
+        top: `${mouseGlow.y}px`,
+        transform: "translate(-50%, -50%)",
+        background: "radial-gradient(circle, rgba(255,255,255,0.10) 0%, rgba(239,68,68,0.10) 45%, transparent 75%)",
+      }}
+    />
+
       <nav className="fixed top-5 left-0 w-full z-50 px-4 md:px-8 animate-[navDrop_0.8s_ease-out]">
         <div className="group relative max-w-7xl mx-auto h-20 px-4 md:px-6 flex justify-between items-center rounded-full overflow-hidden bg-black/35 backdrop-blur-2xl border border-white/15 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_0_35px_rgba(0,0,0,0.5)] hover:border-red-500/40 transition-all duration-300">
   
@@ -197,25 +317,59 @@ useEffect(() => {
 
       <section
         id="home"
-        className="relative min-h-screen pt-24 lg:pt-20 flex items-center overflow-hidden"
+        className="relative min-h-screen pt-36 md:pt-28 lg:pt-20 flex items-center overflow-hidden"
+        onMouseMove={(e) => {
+          const rect = e.currentTarget.getBoundingClientRect();
+
+          const x = (e.clientX - rect.left) / rect.width - 0.5;
+          const y = (e.clientY - rect.top) / rect.height - 0.5;
+
+          setParallax({
+            x,
+            y,
+          });
+        }}
+        onMouseLeave={() => {
+          setParallax({
+            x: 0,
+            y: 0,
+          });
+        }}
       >
         <div className="relative z-10 max-w-screen-2xl mx-auto px-6 md:px-12 w-full min-h-[calc(100vh-80px)] flex flex-col lg:flex-row items-center justify-between">
           <div className="relative w-full">
-            
-            <div className="absolute right-[-50px] top-[0px] w-[800px] h-[500px] rounded-full bg-red-600/30 blur-[120px] z-0"></div>
+            <div
+              className="absolute right-[-50px] top-[0px] w-[650px] h-[350px] rounded-full bg-red-600/30 blur-[120px] z-0 opacity-0 animate-[heroGlow_1.2s_ease_2.8s_forwards]"
+              style={{
+                transform: `translate(${parallax.x * 25}px, ${parallax.y * 25}px)`,
+                transition: "transform 250ms ease-out",
+              }}
+            ></div>
 
-            <div className="absolute right-[800px] top-[350px] w-[500px] h-[500px] rounded-full bg-red-600/30 blur-[120px] z-0"></div>
-
-            <div className="absolute right-[1000px] top-[-400px] w-[800px] h-[500px] rounded-full bg-red-600/30 blur-[120px] z-0"></div>
+            <div
+              className="absolute right-[1000px] top-[-400px] w-[800px] h-[500px] rounded-full bg-red-600/30 blur-[120px] z-0 opacity-0 animate-[heroGlow_1.2s_ease_2.9s_forwards]"
+              style={{
+                transform: `translate(${parallax.x * 15}px, ${parallax.y * 15}px)`,
+                transition: "transform 250ms ease-out",
+              }}
+            ></div>
 
             <div className="relative z-20 max-w-none">
-              <h1 className="font-black uppercase leading-[0.9] tracking-tight text-[8rem] md:text-[10rem]">
-                <span className="block text-[2.5rem] sm:text-[4rem] lg:text-[6rem] xl:text-[7rem]">
-                  Freelance
-                </span>
+              <p className="uppercase tracking-[7px] text-red-500 text-xs md:text-sm font-bold mb-5 opacity-0 animate-[heroFadeUp_0.7s_ease_3.0s_forwards]">
+                Available for Freelance
+              </p>
+
+              <h1 className="font-black uppercase leading-[0.88] tracking-tight">
+                <div className="opacity-0 animate-[heroFadeUp_0.8s_ease_3.2s_forwards]">
+                  {animatedText(
+                    "Freelance",
+                    "block text-[2.8rem] sm:text-[4rem] lg:text-[5.8rem] xl:text-[6.2rem]",
+                    false
+                  )}
+                </div>
 
                 <span
-                  className="block md:hidden text-[3.2rem] font-black text-red-600"
+                  className="block text-[2.45rem] sm:text-[3.6rem] lg:text-[4.9rem] xl:text-[5.6rem] font-black leading-[0.9]"
                   style={{
                     textShadow: `
                       1px 1px 0 #fff,
@@ -223,65 +377,105 @@ useEffect(() => {
                     `,
                   }}
                 >
-                  VIDEO EDITOR &
-                  <br />
-                  DESIGNER
-                </span>
+                  <div className="opacity-0 animate-[heroFadeUp_0.8s_ease_3.4s_forwards]">
+                    {animatedText("Video Editor", "block", true)}
+                  </div>
 
-                <span className="hidden md:block text-[2.2rem] sm:text-[4rem] md:text-[5.2rem] leading-none">
-                  <span
-                    className="text-red-600"
-                    style={{
-                      textShadow: `
-                        1px 1px 0 #fff,
-                        2px 2px 0 rgba(0,0,0,.2)
-                      `,
-                    }}
-                  >
-                    VIDEO EDITOR & DESIGNER
-                  </span>{" "}
+                  <div className="opacity-0 animate-[heroFadeUp_0.8s_ease_3.6s_forwards]">
+                    {animatedText("& Designer", "block", true)}
+                  </div>
                 </span>
               </h1>
 
-              <p className="text-gray-200 text-base md:text-xl max-w-xl leading-relaxed mt-8 mb-10 md:mb-12">
-                Stoiceth, a freelance video editor based in the Philippines.
-                Helping creators and brands tell stories through cinematic editing.
+              <p className="text-gray-200 text-base md:text-xl max-w-xl leading-relaxed mt-8 mb-10 md:mb-12 opacity-0 animate-[heroFadeUp_0.8s_ease_3.8s_forwards]">
+                Crafting cinematic edits, motion graphics, and visual stories that leave a lasting impression.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 w-full sm:w-auto">
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 w-full sm:w-auto opacity-0 animate-[heroFadeUp_0.8s_ease_4.0s_forwards]">
                 <a
                   href="#works"
-                  className="w-full sm:w-fit text-center bg-red-600 hover:bg-red-700 px-8 py-4 md:px-15 md:py-6 rounded-full font-bold shadow-[0_0_25px_rgba(255,0,0,0.4)] hover:shadow-[0_0_40px_rgba(255,0,0,0.7)] transition-all duration-300 hover:scale-105"
+                  className="group relative inline-flex items-center justify-center gap-3 overflow-hidden bg-red-600 hover:bg-red-700 px-8 py-4 md:px-10 md:py-5 rounded-full font-bold shadow-[0_0_25px_rgba(255,0,0,0.4)] hover:shadow-[0_0_50px_rgba(255,0,0,0.75)] transition-all duration-300 hover:scale-105"
                 >
-                  View Works
+                  <span className="absolute inset-0 bg-white/20 translate-x-[-120%] group-hover:translate-x-[120%] transition-transform duration-700 skew-x-12"></span>
+                  <span className="relative z-10">View Works</span>
+                  <span className="relative z-10 group-hover:translate-x-1 transition-transform duration-300">
+                    →
+                  </span>
                 </a>
 
                 <a
                   href="#contact"
-                  className="w-full sm:w-fit text-center bg-black hover:bg-red-950/60 px-8 py-4 md:px-15 md:py-6 rounded-full font-bold border border-white/10 hover:border-red-600 shadow-[0_0_20px_rgba(0,0,0,0.7)] transition-all duration-300 hover:scale-105"
+                  className="group relative w-full sm:w-fit inline-flex items-center justify-center gap-3 overflow-hidden bg-white/5 backdrop-blur-md border border-white/10 hover:border-red-500 hover:bg-red-950/40 px-8 py-4 md:px-10 md:py-5 rounded-full font-bold transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(239,68,68,0.25)]"
                 >
-                  Get in Touch
+                  <span className="absolute inset-0 bg-white/10 translate-x-[-120%] group-hover:translate-x-[120%] transition-transform duration-700 skew-x-12"></span>
+                  <span className="relative z-10">Get in Touch</span>
+                  <span className="relative z-10 group-hover:translate-x-1 transition-transform duration-300">
+                    →
+                  </span>
                 </a>
               </div>
             </div>
 
-            <div className=" relative lg:absolute lg:right-0 xl:right-[-20px] lg:bottom-[-50px] xl:bottom-[-130px] mt-12 lg:mt-0 z-30 flex justify-center">
+            <div
+              className="relative lg:absolute lg:right-[-20px] xl:right-[40px] 2xl:right-[-20px] lg:bottom-[-50px] xl:bottom-[-85px] mt-12 lg:mt-0 z-30 flex justify-center opacity-0 animate-[heroImageReveal_1.2s_ease_4.2s_forwards]"
+              style={{
+                transform: `translate(${parallax.x * -18}px, ${parallax.y * -12}px)`,
+                transition: "transform 250ms ease-out",
+              }}
+              onMouseEnter={() =>
+                setSpotlight((prev) => ({
+                  ...prev,
+                  active: true,
+                }))
+              }
+              onMouseLeave={() =>
+                setSpotlight((prev) => ({
+                  ...prev,
+                  active: false,
+                }))
+              }
+              onMouseMove={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+
+                setSpotlight({
+                  x: ((e.clientX - rect.left) / rect.width) * 100,
+                  y: ((e.clientY - rect.top) / rect.height) * 100,
+                  active: true,
+                });
+              }}
+            >
+              <div className="absolute right-[18%] top-[20%] w-48 h-48 rounded-full bg-red-600/15 blur-[100px]"></div>
+
               <img
                 src="/images/zeth.png"
                 alt="Stoiceth"
-                className="relative z-10 w-[260px] sm:w-[340px] md:w-[430px] lg:w-[42vw] xl:w-[45vw] max-w-[720px] object-contain hover:scale-105 transition-all duration-500 animate-[float_6s_ease-in-out_infinite]"
+                className="relative z-10 w-[260px] sm:w-[340px] md:w-[430px] lg:w-[43vw] xl:w-[46vw] max-w-[740px] object-contain brightness-[0.18] contrast-[1.08] saturate-[0.9] animate-[float_6s_ease-in-out_infinite]"
+              />
+
+              <img
+                src="/images/zeth.png"
+                alt=""
+                className="absolute inset-0 z-20 w-[260px] sm:w-[340px] md:w-[430px] lg:w-[43vw] xl:w-[46vw] max-w-[740px] object-contain pointer-events-none animate-[float_6s_ease-in-out_infinite]"
+                style={{
+                  WebkitMaskImage: spotlight.active
+                    ? `radial-gradient(circle at ${spotlight.x}% ${spotlight.y}%, black 0%, black 28%, rgba(0,0,0,0.55) 45%, transparent 68%)`
+                    : "radial-gradient(circle at 50% 50%, transparent 0%, transparent 100%)",
+                  maskImage: spotlight.active
+                    ? `radial-gradient(circle at ${spotlight.x}% ${spotlight.y}%, black 0%, black 18%, rgba(0,0,0,0.6) 32%, transparent 50%)`
+                    : "radial-gradient(circle at 50% 50%, transparent 0%, transparent 100%)",
+                  filter: "brightness(1.35) contrast(1.08) saturate(1.08)",
+                  transition:
+                    "mask-image 120ms ease-out, -webkit-mask-image 120ms ease-out, opacity 250ms ease-out",
+                  opacity: spotlight.active ? 1 : 0,
+                }}
               />
             </div>
-
           </div>
         </div>
 
-        <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-50 text-[10px] sm:text-xs md:text-base uppercase tracking-wide md:tracking-widest text-gray-200 text-center px-4">
+        <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-50 text-[10px] sm:text-xs md:text-base uppercase tracking-wide md:tracking-widest text-gray-200 text-center px-4 opacity-0 animate-[heroFadeUp_0.8s_ease_4.3s_forwards]">
           Video Editor • Designer • Filmmaker
         </div>
-
-        
-
       </section>
 
       <section id="works" className="relative min-h-screen px-6 md:px-12 py-28 bg-transparent overflow-hidden">
@@ -559,7 +753,7 @@ useEffect(() => {
         </div>
       </section>
       
-        <section id="services" className="relative min-h-screen px-6 md:px-12 py-28 bg-[#080808] overflow-visible">
+        <section id="services" className="relative min-h-screen px-6 md:px-12 py-28 bg-transparent overflow-visible">
           <div className="absolute left-[-250px] top-[150px] w-[600px] h-[600px] rounded-full bg-red-600/10 blur-[150px]"></div>
           <div className="absolute right-[-200px] bottom-[100px] w-[500px] h-[500px] rounded-full bg-red-600/20 blur-[140px]"></div>
 
@@ -847,7 +1041,7 @@ useEffect(() => {
             
         </section>
 
-        <section id="about" className="relative min-h-screen px-6 md:px-12 py-28 bg-black overflow-hidden">
+        <section id="about" className="relative min-h-screen px-6 md:px-12 py-28 bg-transparent overflow-hidden">
           <div className="absolute left-[-250px] top-[200px] w-[600px] h-[600px] rounded-full bg-red-600/20 blur-[150px]"></div>
           <div className="absolute right-[-200px] bottom-[100px] w-[500px] h-[500px] rounded-full bg-red-600/10 blur-[140px]"></div>
 
@@ -972,16 +1166,24 @@ useEffect(() => {
                   <a
                     href="/resume.pdf"
                     target="_blank"
-                    className="bg-red-600 hover:bg-red-700 px-8 py-4 rounded-full font-bold shadow-[0_0_25px_rgba(255,0,0,0.4)] hover:shadow-[0_0_40px_rgba(255,0,0,0.7)] transition-all duration-300 hover:scale-105 "
+                    className="group relative inline-flex items-center gap-3 overflow-hidden bg-red-600 hover:bg-red-700 px-8 py-4 rounded-full font-bold shadow-[0_0_25px_rgba(255,0,0,0.4)] hover:shadow-[0_0_50px_rgba(255,0,0,0.75)] transition-all duration-300 hover:scale-105"
                   >
-                    Download Resume
+                    <span className="absolute inset-0 bg-white/20 translate-x-[-120%] group-hover:translate-x-[120%] transition-transform duration-700 skew-x-12"></span>
+                    <span className="relative z-10">Download Resume</span>
+                    <span className="relative z-10 group-hover:translate-x-1 transition-transform duration-300">
+                      ↓
+                    </span>
                   </a>
 
                   <a
                     href="#contact"
-                    className="bg-black hover:bg-red-950/60 px-8 py-4 rounded-full font-bold border border-white/10 hover:border-red-600 shadow-[0_0_20px_rgba(0,0,0,0.7)] transition-all duration-300 hover:scale-105"
+                    className="group relative inline-flex items-center gap-3 overflow-hidden bg-white/5 backdrop-blur-md border border-white/10 hover:border-red-500 hover:bg-red-950/40 px-8 py-4 rounded-full font-bold transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(239,68,68,0.25)]"
                   >
-                    Get in Touch
+                    <span className="absolute inset-0 bg-white/10 translate-x-[-120%] group-hover:translate-x-[120%] transition-transform duration-700 skew-x-12"></span>
+                    <span className="relative z-10">Get in Touch</span>
+                    <span className="relative z-10 group-hover:translate-x-1 transition-transform duration-300">
+                      →
+                    </span>
                   </a>
                 </div>
               </div>
@@ -989,7 +1191,7 @@ useEffect(() => {
           </div>
         </section>
 
-        <section id="contact" className="relative min-h-screen px-6 md:px-12 pt-36 pb-28 bg-black overflow-hidden">
+        <section id="contact" className="relative min-h-screen px-6 md:px-12 pt-36 pb-28 bg-transparent overflow-hidden">
           <div className="absolute left-[-250px] top-[120px] w-[600px] h-[600px] rounded-full bg-red-600/20 blur-[160px] animate-[pulse_8s_ease-in-out_infinite]"></div>
           <div className="absolute right-[-250px] bottom-[80px] w-[600px] h-[600px] rounded-full bg-red-600/10 blur-[160px] animate-[pulse_10s_ease-in-out_infinite]"></div>
 
