@@ -417,45 +417,41 @@ useEffect(() => {
             </div>
 
             <div
-              className="relative lg:absolute lg:right-[-20px] xl:right-[40px] 2xl:right-[-20px] lg:bottom-[-50px] xl:bottom-[-85px] mt-12 lg:mt-0 z-30 flex justify-center opacity-0 animate-[heroImageReveal_1.2s_ease_4.2s_forwards]"
-              style={{
-                transform: `translate(${parallax.x * -18}px, ${parallax.y * -12}px)`,
-                transition: "transform 250ms ease-out",
-              }}
-              onMouseEnter={() =>
-                setSpotlight((prev) => ({
-                  ...prev,
-                  active: true,
-                }))
-              }
-              onMouseLeave={() =>
-                setSpotlight((prev) => ({
-                  ...prev,
-                  active: false,
-                }))
-              }
-              onMouseMove={(e) => {
-                const rect = e.currentTarget.getBoundingClientRect();
+  className="relative mt-12 xl:mt-0 mx-auto xl:absolute xl:right-[40px] 2xl:right-[-20px] xl:bottom-[-85px] z-30 flex justify-center w-fit opacity-0 animate-[heroImageReveal_1.2s_ease_4.2s_forwards]"
+  onMouseEnter={() =>
+    setSpotlight((prev) => ({
+      ...prev,
+      active: true,
+    }))
+  }
+  onMouseLeave={() =>
+    setSpotlight((prev) => ({
+      ...prev,
+      active: false,
+    }))
+  }
+  onMouseMove={(e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
 
-                setSpotlight({
-                  x: ((e.clientX - rect.left) / rect.width) * 100,
-                  y: ((e.clientY - rect.top) / rect.height) * 100,
-                  active: true,
-                });
-              }}
-            >
+    setSpotlight({
+      x: ((e.clientX - rect.left) / rect.width) * 100,
+      y: ((e.clientY - rect.top) / rect.height) * 100,
+      active: true,
+    });
+  }}
+>
               <div className="absolute right-[18%] top-[20%] w-48 h-48 rounded-full bg-red-600/15 blur-[100px]"></div>
 
               <img
                 src="/images/zeth.png"
                 alt="Stoiceth"
-                className="relative z-10 w-[260px] sm:w-[340px] md:w-[430px] lg:w-[43vw] xl:w-[46vw] max-w-[740px] object-contain brightness-[0.18] contrast-[1.08] saturate-[0.9] animate-[float_6s_ease-in-out_infinite]"
+                className="relative z-10 w-[220px] sm:w-[280px] md:w-[340px] lg:w-[380px] xl:w-[46vw] max-w-[700px] object-contain brightness-[0.18] contrast-[1.08] saturate-[0.9] animate-[float_6s_ease-in-out_infinite]"
               />
 
               <img
                 src="/images/zeth.png"
                 alt=""
-                className="absolute inset-0 z-20 w-[260px] sm:w-[340px] md:w-[430px] lg:w-[43vw] xl:w-[46vw] max-w-[740px] object-contain pointer-events-none animate-[float_6s_ease-in-out_infinite]"
+                className="absolute inset-0 z-20 w-[220px] sm:w-[280px] md:w-[340px] lg:w-[380px] xl:w-[46vw] max-w-[700px] object-contain pointer-events-none animate-[float_6s_ease-in-out_infinite]"
                 style={{
                   WebkitMaskImage: spotlight.active
                     ? `radial-gradient(circle at ${spotlight.x}% ${spotlight.y}%, black 0%, black 28%, rgba(0,0,0,0.55) 45%, transparent 68%)`
