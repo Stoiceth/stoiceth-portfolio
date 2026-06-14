@@ -744,7 +744,7 @@ useEffect(() => {
               className="text-center mb-12"
             >
               <p className="text-red-500 uppercase tracking-[6px] text-sm font-bold mb-4">
-                ✦ Services & Tools
+                Services & Tools
               </p>
 
               <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tight mb-5">
@@ -814,7 +814,7 @@ useEffect(() => {
                     {[
                       {
                         href: "#works",
-                        icon: "/icons/video editing.webp",
+                        icon: "/icons/graphic deisgn.webp",
                         iconScale: "scale-150",
                         alt: "Video Editing",
                         number: "Service 01",
@@ -1023,7 +1023,7 @@ useEffect(() => {
 
                 <div className="relative bg-[#0b0b0b] border border-red-950/60 rounded-3xl overflow-hidden shadow-[0_0_35px_rgba(255,0,0,0.15)] aspect-[4/5]">
                   <img
-                    src="/images/The Director.png"
+                    src="/images/zeth 2.jpg"
                     alt="The Director"
                     className="w-full h-full object-cover hover:scale-105 transition-all duration-500"
                   />
