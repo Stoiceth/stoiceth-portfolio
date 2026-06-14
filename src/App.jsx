@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 
 import {
   FaFacebookF,
@@ -125,6 +126,8 @@ useEffect(() => {
     clearTimeout(second);
   };
 }, []);
+
+
 
   return (
     <div
@@ -409,7 +412,7 @@ useEffect(() => {
                 >
                   <span className="absolute inset-0 bg-white/10 translate-x-[-120%] group-hover:translate-x-[120%] transition-transform duration-700 skew-x-12"></span>
                   <span className="relative z-10">Get in Touch</span>
-                  <span className="relative z-10 group-hover:translate-x-1 transition-transform duration-300">
+                  <span className="transition-transform duration-300 group-hover/link:translate-x-1">
                     →
                   </span>
                 </a>
@@ -417,29 +420,29 @@ useEffect(() => {
             </div>
 
             <div
-  className="relative mt-12 xl:mt-0 mx-auto xl:absolute xl:right-[40px] 2xl:right-[-20px] xl:bottom-[-85px] z-30 flex justify-center w-fit opacity-0 animate-[heroImageReveal_1.2s_ease_4.2s_forwards]"
-  onMouseEnter={() =>
-    setSpotlight((prev) => ({
-      ...prev,
-      active: true,
-    }))
-  }
-  onMouseLeave={() =>
-    setSpotlight((prev) => ({
-      ...prev,
-      active: false,
-    }))
-  }
-  onMouseMove={(e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
+              className="relative mt-12 xl:mt-0 mx-auto xl:absolute xl:right-[40px] 2xl:right-[-20px] xl:bottom-[-85px] z-30 flex justify-center w-fit opacity-0 animate-[heroImageReveal_1.2s_ease_4.2s_forwards]"
+              onMouseEnter={() =>
+                setSpotlight((prev) => ({
+                  ...prev,
+                  active: true,
+                }))
+              }
+              onMouseLeave={() =>
+                setSpotlight((prev) => ({
+                  ...prev,
+                  active: false,
+                }))
+              }
+              onMouseMove={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
 
-    setSpotlight({
-      x: ((e.clientX - rect.left) / rect.width) * 100,
-      y: ((e.clientY - rect.top) / rect.height) * 100,
-      active: true,
-    });
-  }}
->
+                setSpotlight({
+                  x: ((e.clientX - rect.left) / rect.width) * 100,
+                  y: ((e.clientY - rect.top) / rect.height) * 100,
+                  active: true,
+                });
+              }}
+            >
               <div className="absolute right-[18%] top-[20%] w-48 h-48 rounded-full bg-red-600/15 blur-[100px]"></div>
 
               <img
@@ -474,12 +477,23 @@ useEffect(() => {
         </div>
       </section>
 
+
+
+
+
+
       <section id="works" className="relative min-h-screen px-6 md:px-12 py-28 bg-transparent overflow-hidden">
         <div className="absolute left-[-200px] top-[150px] w-[500px] h-[500px] rounded-full bg-red-600/20 blur-[130px]"></div>
         <div className="absolute right-[-250px] bottom-[100px] w-[600px] h-[600px] rounded-full bg-red-600/10 blur-[150px]"></div>
 
         <div className="relative z-10 max-w-screen-2xl mx-auto">
-          <div className="text-center mb-14">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            className="text-center mb-14"
+          >
             <p className="text-red-500 uppercase tracking-[6px] text-sm font-bold mb-4">
               My Works
             </p>
@@ -489,17 +503,24 @@ useEffect(() => {
             </h2>
 
             <p className="text-gray-400 max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
-               A collection of projects showcasing my skills in video editing, motion graphics, and graphic design.
+              A collection of projects showcasing my skills in video editing, motion graphics, and graphic design.
             </p>
-          </div>
+          </motion.div>
 
-          <div className="max-w-xl mx-auto mb-14 p-2 rounded-full border border-red-900/50 bg-white/5 backdrop-blur-md flex gap-2">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.7, delay: 0.15, ease: "easeOut" }}
+            className="max-w-xl mx-auto mb-14 p-2 rounded-full border border-red-900/50 bg-white/5 backdrop-blur-md flex gap-2"
+          >
+
             <button
               onClick={() => setActiveCategory("video")}
-              className={`w-1/2 py-4 rounded-full font-bold transition-all duration-300 ${
+              className={`w-1/2 py-4 rounded-full font-bold transition-all duration-500 ease-out hover:-translate-y-1 ${
                 activeCategory === "video"
-                  ? "bg-red-600 text-white shadow-[0_0_25px_rgba(255,0,0,0.35)]"
-                  : "bg-black/60 text-gray-300 border border-white/5 hover:border-red-600 hover:text-white"
+                  ? "bg-red-600 text-white shadow-[0_0_35px_rgba(239,68,68,0.45)]"
+                  : "bg-black/60 text-gray-300 border border-white/5 hover:border-red-600 hover:text-white hover:shadow-[0_0_20px_rgba(239,68,68,0.2)]"
               }`}
             >
               Video Editing
@@ -507,243 +528,204 @@ useEffect(() => {
 
             <button
               onClick={() => setActiveCategory("design")}
-              className={`w-1/2 py-4 rounded-full font-bold transition-all duration-300 ${
+              className={`w-1/2 py-4 rounded-full font-bold transition-all duration-500 ease-out hover:-translate-y-1 ${
                 activeCategory === "design"
-                  ? "bg-red-600 text-white shadow-[0_0_25px_rgba(255,0,0,0.35)]"
-                  : "bg-black/60 text-gray-300 border border-white/5 hover:border-red-600 hover:text-white"
+                  ? "bg-red-600 text-white shadow-[0_0_35px_rgba(239,68,68,0.45)]"
+                  : "bg-black/60 text-gray-300 border border-white/5 hover:border-red-600 hover:text-white hover:shadow-[0_0_20px_rgba(239,68,68,0.2)]"
               }`}
             >
               Graphic Design
             </button>
-          </div>
+
+          </motion.div>
 
           {activeCategory === "video" && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="group rounded-3xl overflow-hidden bg-[#0b0b0b] border border-red-950/60 hover:border-red-600/80 shadow-[0_0_25px_rgba(0,0,0,0.8)] hover:shadow-[0_0_35px_rgba(255,0,0,0.25)] transition-all duration-500 hover:-translate-y-3">
-                <div className="h-64 overflow-hidden relative">
-                <img
-                  src="/images/works/video-projects.jpg"
-                  alt="Video Projects"
-                  className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
-                />
+              {[
+                {
+                  image: "/works/nopic.png",
+                  alt: "Video Projects",
+                  title: "Video Projects",
+                  desc: "Short films, documentaries, long-form edits, and cinematic storytelling projects.",
+                  tag: "Storytelling",
+                  link: "https://drive.google.com/drive/folders/1QILnebgXc3eU4qGKyZbBK7QOr_oGSzYz?usp=drive_link",
+                },
+                {
+                  image: "/works/nopic.png",
+                  alt: "Reels",
+                  title: "Reels & Short-form",
+                  desc: "TikTok videos, school reels, social media edits, and fast-paced vertical content.",
+                  tag: "Short-form",
+                  link: "https://drive.google.com/drive/folders/1a0mAH7ANyyg60TS0IY9jFyr-1uRNVkpX?usp=drive_link",
+                },
+                {
+                  image: "/works/nopic.png",
+                  alt: "Motion Graphics",
+                  title: "Motion Graphics",
+                  desc: "Animated titles, transitions, visual effects, motion elements, and creative graphics.",
+                  tag: "Animation",
+                  link: "https://drive.google.com/drive/folders/1n-_g7ih8L5zIs0F59VmAc52om74AyA4q?usp=drive_link",
+                },
+              ].map((work, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 45 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{
+                    duration: 0.7,
+                    delay: index * 0.12,
+                    ease: "easeOut",
+                  }}
+                  className="group relative rounded-3xl overflow-hidden bg-[#0b0b0b] border border-red-950/60 transition-all duration-700 ease-out hover:-translate-y-4 hover:scale-[1.02] hover:border-red-500 hover:shadow-[0_0_60px_rgba(239,68,68,0.28)]"
+                >
+                  <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 bg-gradient-to-br from-red-500/10 via-transparent to-red-700/10"></div>
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
-              </div>
+                  <div className="h-64 overflow-hidden relative">
+                    <img
+                      src={work.image}
+                      alt={work.alt}
+                      className="w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-[1.08] group-hover:brightness-110 group-hover:contrast-105"
+                    />
 
-                <div className="p-8">
-                  <h3 className="text-2xl font-black mb-4">
-                    Video Projects
-                  </h3>
-
-                  <p className="text-gray-400 leading-relaxed mb-8">
-                    Short films, documentaries, long-form edits, and cinematic storytelling projects.
-                  </p>
-
-                  <div className="flex justify-between items-center">
-                    <span className="text-red-400 border border-red-800/70 px-4 py-2 rounded-full text-sm font-semibold">
-                      Storytelling
-                    </span>
-
-                    <a
-                      href="https://drive.google.com/drive/folders/1QILnebgXc3eU4qGKyZbBK7QOr_oGSzYz?usp=drive_link"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-white font-bold group-hover:text-red-500 transition-all"
-                     > 
-                      View Collection →
-                    </a>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent transition-all duration-700 group-hover:from-black/70 group-hover:via-black/10"></div>
                   </div>
-                </div>
-              </div>
 
-              <div className="group rounded-3xl overflow-hidden bg-[#0b0b0b] border border-red-950/60 hover:border-red-600/80 shadow-[0_0_25px_rgba(0,0,0,0.8)] hover:shadow-[0_0_35px_rgba(255,0,0,0.25)] transition-all duration-500 hover:-translate-y-3">
-                <div className="h-64 overflow-hidden relative">
-                  <img
-                    src="/images/works/reels.jpg"
-                    alt="Reels"
-                    className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
-                  />
-
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
-                </div>
-
-                <div className="p-8">
-                  <h3 className="text-2xl font-black mb-4">
-                    Reels & Short-form
-                  </h3>
-
-                  <p className="text-gray-400 leading-relaxed mb-8">
-                    TikTok videos, school reels, social media edits, and fast-paced vertical content.
-                  </p>
-
-                  <div className="flex justify-between items-center">
-                    <span className="text-red-400 border border-red-800/70 px-4 py-2 rounded-full text-sm font-semibold">
-                      Short-form
+                  <div className="absolute top-4 right-4 z-20 opacity-0 group-hover:opacity-100 transition-all duration-500 group-hover:translate-y-0 translate-y-2">
+                    <span className="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-[11px] font-bold tracking-[2px] text-white">
+                      FEATURED
                     </span>
-
-                    <a
-                      href="https://drive.google.com/drive/folders/1a0mAH7ANyyg60TS0IY9jFyr-1uRNVkpX?usp=drive_link"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-white font-bold group-hover:text-red-500 transition-all"
-                    >
-                      View Collection →
-                    </a>
                   </div>
-                </div>
-              </div>
 
-              <div className="group rounded-3xl overflow-hidden bg-[#0b0b0b] border border-red-950/60 hover:border-red-600/80 shadow-[0_0_25px_rgba(0,0,0,0.8)] hover:shadow-[0_0_35px_rgba(255,0,0,0.25)] transition-all duration-500 hover:-translate-y-3">
-                <div className="h-64 overflow-hidden relative">
-                  <img
-                    src="/images/works/motion.jpg"
-                    alt="Motion Graphics"
-                    className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
-                  />
+                  <div className="relative z-10 p-8">
+                    <h3 className="text-2xl font-black mb-4 transition-all duration-500 group-hover:text-red-500">
+                      {work.title}
+                    </h3>
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
-                </div>
+                    <p className="text-gray-400 leading-relaxed mb-8">
+                      {work.desc}
+                    </p>
 
-                <div className="p-8">
-                  <h3 className="text-2xl font-black mb-4">
-                    Motion Graphics
-                  </h3>
+                    <div className="flex justify-between items-center gap-4">
+                      <span className="text-red-400 border border-red-800/70 px-4 py-2 rounded-full text-sm font-semibold transition-all duration-500 group-hover:bg-red-600 group-hover:text-white group-hover:border-red-600">
+                        <>
+                          ✦ {work.tag}
+                        </>
+                      </span>
 
-                  <p className="text-gray-400 leading-relaxed mb-8">
-                    Animated titles, transitions, visual effects, motion elements, and creative graphics.
-                  </p>
+                      <a
+                        href={work.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group/link relative inline-flex items-center gap-2 font-bold text-white transition-all duration-300 hover:-translate-y-1 hover:text-red-500"
+                      >
+                        <span>View Collection</span>
 
-                  <div className="flex justify-between items-center">
-                    <span className="text-red-400 border border-red-800/70 px-4 py-2 rounded-full text-sm font-semibold">
-                      Animation
-                    </span>
+                        <span className="transition-all duration-300 group-hover/link:translate-x-1">
+                          →
+                        </span>
 
-                    <a
-                      href="https://drive.google.com/drive/folders/1n-_g7ih8L5zIs0F59VmAc52om74AyA4q?usp=drive_link"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-white font-bold group-hover:text-red-500 transition-all"
-                    >
-                      View Collection →
-                    </a>
+                        <span className="absolute left-0 -bottom-1 h-[2px] w-0 bg-red-500 transition-all duration-300 group-hover/link:w-full"></span>
+                      </a>
+                    </div>
                   </div>
-                </div>
-              </div>
+                </motion.div>
+              ))}
             </div>
           )}
 
           {activeCategory === "design" && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="group rounded-3xl overflow-hidden bg-[#0b0b0b] border border-red-950/60 hover:border-red-600/80 shadow-[0_0_25px_rgba(0,0,0,0.8)] hover:shadow-[0_0_35px_rgba(255,0,0,0.25)] transition-all duration-500 hover:-translate-y-3">
-                <div className="h-64 overflow-hidden relative">
-                  <img
-                    src="/images/works/motion.jpg"
-                    alt="Motion Graphics"
-                    className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
-                  />
+              {[
+                {
+                  image: "/works/nopic.png",
+                  alt: "Brand Design",
+                  title: "Brand Design",
+                  desc: "Logos, identity concepts, and visual branding materials for creative projects.",
+                  tag: "Branding",
+                  link: "https://drive.google.com/drive/folders/1QZVwmrtODmYrWs2S2TGPghnhk1PsKaaX?usp=drive_link",
+                },
+                {
+                  image: "/works/nopic.png",
+                  alt: "Social Media",
+                  title: "Social Media Design",
+                  desc: "Posters, posts, banners, and promotional graphics for online platforms.",
+                  tag: "Social Media",
+                  link: "https://drive.google.com/drive/folders/1lkMB130a2I3SvwfrwQRp-JYnEYJcr5jh?usp=drive_link",
+                },
+                {
+                  image: "/works/nopic.png",
+                  alt: "Poster Design",
+                  title: "Poster & Layout Design",
+                  desc: "Event posters, layout designs, presentations, and creative publication materials.",
+                  tag: "Layout",
+                  link: "https://drive.google.com/drive/folders/1P3Gkxn88peH0MSepx8S7W-rk9wM5CEd8?usp=drive_link",
+                },
+              ].map((work, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 45 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{
+                    duration: 0.7,
+                    delay: index * 0.12,
+                    ease: "easeOut",
+                  }}
+                  className="group relative rounded-3xl overflow-hidden bg-[#0b0b0b] border border-red-950/60 transition-all duration-700 ease-out hover:-translate-y-4 hover:scale-[1.02] hover:border-red-500 hover:shadow-[0_0_60px_rgba(239,68,68,0.28)]"
+                >
+                  <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 bg-gradient-to-br from-red-500/10 via-transparent to-red-700/10"></div>
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
-                </div>
-                
-                <div className="p-8">
-                  <h3 className="text-2xl font-black mb-4">
-                    Brand Design
-                  </h3>
+                  <div className="h-64 overflow-hidden relative">
+                    <img
+                      src={work.image}
+                      alt={work.alt}
+                      className="w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-[1.08] group-hover:brightness-110 group-hover:contrast-105"
+                    />
 
-                  <p className="text-gray-400 leading-relaxed mb-8">
-                    Logos, identity concepts, and visual branding materials for creative projects.
-                  </p>
-
-                  <div className="flex justify-between items-center">
-                    <span className="text-red-400 border border-red-800/70 px-4 py-2 rounded-full text-sm font-semibold">
-                      Branding
-                    </span>
-
-                    <a
-                      href="https://drive.google.com/drive/folders/1QZVwmrtODmYrWs2S2TGPghnhk1PsKaaX?usp=drive_link"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-white font-bold group-hover:text-red-500 transition-all"
-                    >
-                      View Collection →
-                    </a>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent transition-all duration-700 group-hover:from-black/70 group-hover:via-black/10"></div>
                   </div>
-                </div>
-              </div>
 
-              <div className="group rounded-3xl overflow-hidden bg-[#0b0b0b] border border-red-950/60 hover:border-red-600/80 shadow-[0_0_25px_rgba(0,0,0,0.8)] hover:shadow-[0_0_35px_rgba(255,0,0,0.25)] transition-all duration-500 hover:-translate-y-3">
-                <div className="h-64 overflow-hidden relative">
-                  <img
-                    src="/images/works/social.jpg"
-                    alt="Social Media"
-                    className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
-                  />
-
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
-                </div>
-
-                <div className="p-8">
-                  <h3 className="text-2xl font-black mb-4">
-                    Social Media Design
-                  </h3>
-
-                  <p className="text-gray-400 leading-relaxed mb-8">
-                    Posters, posts, banners, and promotional graphics for online platforms.
-                  </p>
-
-                  <div className="flex justify-between items-center">
-                    <span className="text-red-400 border border-red-800/70 px-4 py-2 rounded-full text-sm font-semibold">
-                      Social Media
+                  <div className="absolute top-4 right-4 z-20 opacity-0 group-hover:opacity-100 transition-all duration-500 group-hover:translate-y-0 translate-y-2">
+                    <span className="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-[11px] font-bold tracking-[2px] text-white">
+                      FEATURED
                     </span>
-
-                    <a
-                      href="https://drive.google.com/drive/folders/1lkMB130a2I3SvwfrwQRp-JYnEYJcr5jh?usp=drive_link"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-white font-bold group-hover:text-red-500 transition-all"
-                    >
-                      View Collection →
-                    </a>
                   </div>
-                </div>
-              </div>
 
-              <div className="group rounded-3xl overflow-hidden bg-[#0b0b0b] border border-red-950/60 hover:border-red-600/80 shadow-[0_0_25px_rgba(0,0,0,0.8)] hover:shadow-[0_0_35px_rgba(255,0,0,0.25)] transition-all duration-500 hover:-translate-y-3">
-                <div className="h-64 overflow-hidden relative">
-                  <img
-                    src="/images/works/poster.jpg"
-                    alt="Poster Design"
-                    className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
-                  />
+                  <div className="relative z-10 p-8">
+                    <h3 className="text-2xl font-black mb-4 transition-all duration-500 group-hover:text-red-500">
+                      {work.title}
+                    </h3>
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
-                </div>
+                    <p className="text-gray-400 leading-relaxed mb-8">
+                      {work.desc}
+                    </p>
 
-                <div className="p-8">
-                  <h3 className="text-2xl font-black mb-4">
-                    Poster & Layout Design
-                  </h3>
+                    <div className="flex justify-between items-center gap-4">
+                      <span className="text-red-400 border border-red-800/70 px-4 py-2 rounded-full text-sm font-semibold transition-all duration-500 group-hover:bg-red-600 group-hover:text-white group-hover:border-red-600">
+                        <>
+                          ✦ {work.tag}
+                        </>
+                      </span>
 
-                  <p className="text-gray-400 leading-relaxed mb-8">
-                    Event posters, layout designs, presentations, and creative publication materials.
-                  </p>
+                      <a
+                        href={work.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group/link relative inline-flex items-center gap-2 font-bold text-white transition-all duration-300 hover:-translate-y-1 hover:text-red-500"
+                      >
+                        <span>View Collection</span>
 
-                  <div className="flex justify-between items-center">
-                    <span className="text-red-400 border border-red-800/70 px-4 py-2 rounded-full text-sm font-semibold">
-                      Layout
-                    </span>
+                        <span className="transition-all duration-300 group-hover/link:translate-x-1">
+                          →
+                        </span>
 
-                    <a
-                      href="https://drive.google.com/drive/folders/1P3Gkxn88peH0MSepx8S7W-rk9wM5CEd8?usp=drive_link"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-white font-bold group-hover:text-red-500 transition-all"
-                    >
-                      View Collection →
-                    </a>
+                        <span className="absolute left-0 -bottom-1 h-[2px] w-0 bg-red-500 transition-all duration-300 group-hover/link:w-full"></span>
+                      </a>
+                    </div>
                   </div>
-                </div>
-              </div>
+                </motion.div>
+              ))}
             </div>
           )}
         </div>
@@ -754,9 +736,15 @@ useEffect(() => {
           <div className="absolute right-[-200px] bottom-[100px] w-[500px] h-[500px] rounded-full bg-red-600/20 blur-[140px]"></div>
 
           <div className="relative z-10 max-w-screen-2xl mx-auto">
-            <div className="text-center mb-14">
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.7, ease: "easeOut" }}
+              className="text-center mb-12"
+            >
               <p className="text-red-500 uppercase tracking-[6px] text-sm font-bold mb-4">
-                Services & Tools
+                ✦ Services & Tools
               </p>
 
               <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tight mb-5">
@@ -764,27 +752,35 @@ useEffect(() => {
               </h2>
 
               <p className="text-gray-400 max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
-                Discover the creative services I offer and the tools I use to bring every project to life.
+                Helping creators and brands through cinematic editing, modern visual design, and creative storytelling.
               </p>
-            </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, scaleX: 0 }}
+              whileInView={{ opacity: 1, scaleX: 1 }}
+              viewport={{ once: true, amount: 0.5 }}
+              transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}
+              className="w-32 h-[2px] bg-gradient-to-r from-transparent via-red-500 to-transparent mx-auto mb-14 opacity-80 shadow-[0_0_12px_rgba(239,68,68,0.5)]"
+            ></motion.div>
 
             <div className="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-8">
-              <div className="space-y-5 sticky top-28 self-start">
+              <motion.div
+                initial={{ opacity: 0, x: -60 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, amount: 0.25 }}
+                transition={{ duration: 0.7, delay: 0.15, ease: "easeOut" }}
+                className="space-y-5 sticky top-28 self-start"
+              >
                 <button
                   onClick={() => setActiveServiceTab("services")}
-                  className={`w-full text-left rounded-3xl p-6 border
-                  hover:-translate-y-1
-                  hover:border-red-500
-                  hover:shadow-[0_0_25px_rgba(255,0,0,0.2)]
-                  transition-all duration-300 ${
+                  className={`relative w-full text-left rounded-3xl p-6 border overflow-hidden hover:-translate-y-1 transition-all duration-500 ${
                     activeServiceTab === "services"
-                      ? "bg-red-600 border-red-500 shadow-[0_0_35px_rgba(255,0,0,0.35)]"
-                      : "bg-[#0b0b0b] border-red-950/60 hover:border-red-600"
+                      ? "bg-red-600 border-red-500 shadow-[0_0_40px_rgba(239,68,68,0.45)] scale-[1.02]"
+                      : "bg-[#0b0b0b] border-red-950/60 hover:border-red-600 hover:shadow-[0_0_25px_rgba(255,0,0,0.2)]"
                   }`}
                 >
-                  <p className="text-sm uppercase tracking-[4px] mb-3 opacity-80">
-                    Service List
-                  </p>
+                  <p className="text-sm uppercase tracking-[4px] mb-3 opacity-80">● Service List</p>
                   <h3 className="text-2xl font-black mb-2">Services</h3>
                   <p className={activeServiceTab === "services" ? "text-white/80" : "text-gray-400"}>
                     Explore what I can offer.
@@ -793,248 +789,213 @@ useEffect(() => {
 
                 <button
                   onClick={() => setActiveServiceTab("tools")}
-                  className={`w-full text-left rounded-3xl p-6 border
-                  hover:-translate-y-1
-                  hover:border-red-500
-                  hover:shadow-[0_0_25px_rgba(255,0,0,0.2)]
-                  transition-all duration-300 ${
+                  className={`relative w-full text-left rounded-3xl p-6 border overflow-hidden hover:-translate-y-1 transition-all duration-500 ${
                     activeServiceTab === "tools"
-                      ? "bg-red-600 border-red-500 shadow-[0_0_35px_rgba(255,0,0,0.35)]"
-                      : "bg-[#0b0b0b] border-red-950/60 hover:border-red-600"
+                      ? "bg-red-600 border-red-500 shadow-[0_0_40px_rgba(239,68,68,0.45)] scale-[1.02]"
+                      : "bg-[#0b0b0b] border-red-950/60 hover:border-red-600 hover:shadow-[0_0_25px_rgba(255,0,0,0.2)]"
                   }`}
                 >
-                  <p className="text-sm uppercase tracking-[4px] mb-3 opacity-80">
-                    Creative Stack
-                  </p>
+                  <p className="text-sm uppercase tracking-[4px] mb-3 opacity-80">● Creative Stack</p>
                   <h3 className="text-2xl font-black mb-2">Creative Tools</h3>
                   <p className={activeServiceTab === "tools" ? "text-white/80" : "text-gray-400"}>
                     See the apps I use.
                   </p>
                 </button>
-              </div>
+              </motion.div>
 
-              <div>
-                      {activeServiceTab === "services" && (
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                      <a
-                        href="#works"
-                        className="group relative min-h-[420px] bg-[#0b0b0b] border border-red-950/60 rounded-3xl p-10 overflow-hidden hover:border-red-600 hover:shadow-[0_0_45px_rgba(255,0,0,0.25)] hover:-translate-y-3 transition-all duration-500"
+              <motion.div
+                key={activeServiceTab}
+                initial={{ opacity: 0, x: 60 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+              >
+                {activeServiceTab === "services" && (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    {[
+                      {
+                        href: "#works",
+                        icon: "/icons/video editing.webp",
+                        iconScale: "scale-150",
+                        alt: "Video Editing",
+                        number: "Service 01",
+                        title: "Video Editing",
+                        desc: "I create clean, cinematic, and story-driven edits for short films, reels, school projects, promotional videos, documentaries, and long-form content.",
+                        list: ["Clean cuts and smooth pacing", "Color mood and cinematic feel", "Reels, documentaries, and long-form edits"],
+                        tags: ["Reels", "Cinematic", "Storytelling"],
+                        cta: "View Video Works",
+                      },
+                      {
+                        href: "#works",
+                        icon: "/icons/graphic deisgn.jpg",
+                        iconScale: "scale-100",
+                        alt: "Graphic Design",
+                        number: "Service 02",
+                        title: "Graphic Design",
+                        desc: "I design posters, social media graphics, layouts, thumbnails, visual concepts, and branding materials that match the mood and purpose of each project.",
+                        list: ["Posters and promotional layouts", "Social media graphics", "Visual concepts and branding materials"],
+                        tags: ["Posters", "Layouts", "Branding"],
+                        cta: "View Design Works",
+                      },
+                    ].map((service, index) => (
+                      <motion.a
+                        key={index}
+                        href={service.href}
+                        initial={{ opacity: 0, x: 50 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true, amount: 0.25 }}
+                        transition={{ duration: 0.7, delay: index * 0.15, ease: "easeOut" }}
+                        className="group relative min-h-[430px] bg-[#0b0b0b] border border-red-950/60 rounded-3xl p-8 md:p-10 overflow-hidden hover:border-red-600 hover:shadow-[0_0_55px_rgba(255,0,0,0.28)] hover:-translate-y-3 transition-all duration-700 ease-out"
                       >
-                        <div className="absolute right-[-120px] top-[-120px] w-[350px] h-[350px] bg-red-600/20 rounded-full blur-[100px]"></div>
+                        <div className="absolute right-[-120px] top-[-120px] w-[350px] h-[350px] bg-red-600/20 rounded-full blur-[100px] group-hover:bg-red-600/30 group-hover:scale-125 transition-all duration-700"></div>
 
                         <div className="relative z-10 h-full flex flex-col justify-between">
                           <div>
-                            <div className="mb-8 group-hover:scale-110 transition-all duration-500">
-                              <img
-                                src="/icons/video-editing.png"
-                                alt="Video Editing"
-                                className="w-16 h-16 object-contain"
-                              />
+                            <div className="mb-8 w-20 h-20 rounded-3xl bg-red-600/10 border border-red-900/50 flex items-center justify-center overflow-hidden group-hover:rotate-3 group-hover:scale-110 transition-all duration-500">
+                              <img src={service.icon} alt={service.alt} className={`w-full h-full object-cover ${service.iconScale}`} />
                             </div>
-                            <p className="text-red-500 uppercase tracking-[5px] text-sm font-bold mb-4">
-                              Service 01
-                            </p>
 
-                            <div className="w-14 h-1 bg-red-500 rounded-full mb-6"></div>
+                            <p className="text-red-500 uppercase tracking-[5px] text-sm font-bold mb-4">{service.number}</p>
+                            <div className="w-14 h-1 bg-red-500 rounded-full mb-6 group-hover:w-24 transition-all duration-500"></div>
 
-                            <h3 className="text-4xl md:text-5xl font-black mb-6">
-                              Video Editing
+                            <h3 className="text-4xl md:text-5xl font-black mb-6 group-hover:text-red-500 transition-all duration-500">
+                              {service.title}
                             </h3>
 
-                            <p className="text-gray-400 text-lg leading-relaxed max-w-xl">
-                              I create clean, cinematic, and story-driven edits for short films, reels, school projects, promotional videos, documentaries, and long-form content.
-                            </p>
+                            <p className="text-gray-400 text-lg leading-relaxed max-w-xl">{service.desc}</p>
 
                             <ul className="mt-6 space-y-3 text-gray-300">
-                              <li>✓ Clean cuts and smooth pacing</li>
-                              <li>✓ Color mood and cinematic feel</li>
-                              <li>✓ Reels, documentaries, and long-form edits</li>
+                              {service.list.map((item, i) => (
+                                <li key={i}>✓ {item}</li>
+                              ))}
                             </ul>
-                            
                           </div>
 
-                          <div className="mt-10 flex flex-wrap gap-3">
-                            <span className="text-red-400 border border-red-800/70 px-4 py-2 rounded-full text-sm font-semibold">Reels</span>
-                            <span className="text-red-400 border border-red-800/70 px-4 py-2 rounded-full text-sm font-semibold">Cinematic</span>
-                            <span className="text-red-400 border border-red-800/70 px-4 py-2 rounded-full text-sm font-semibold">Storytelling</span>
-                          </div>
-
-                          <p className="mt-8 text-white font-bold group-hover:text-red-500 transition-all">
-                            View Video Works →
-                          </p>
-                        </div>
-                      </a>
-
-                      <a
-                        href="#works"
-                        className="group relative min-h-[420px] bg-[#0b0b0b] border border-red-950/60 rounded-3xl p-10 overflow-hidden hover:border-red-600 hover:shadow-[0_0_45px_rgba(255,0,0,0.25)] hover:-translate-y-3 transition-all duration-500"
-                      >
-                        <div className="absolute right-[-120px] bottom-[-120px] w-[350px] h-[350px] bg-red-600/20 rounded-full blur-[100px]"></div>
-
-                        <div className="relative z-10 h-full flex flex-col justify-between">
                           <div>
-                            <div className="mb-8 group-hover:scale-110 transition-all duration-500">
-                              <img
-                                src="/icons/graphic-design.png"
-                                alt="Graphic Design"
-                                className="w-16 h-16 object-contain"
-                              />
+                            <div className="mt-10 flex flex-wrap gap-3">
+                              {service.tags.map((tag, i) => (
+                                <span key={i} className="text-red-400 border border-red-800/70 px-4 py-2 rounded-full text-sm font-semibold transition-all duration-500 group-hover:bg-red-600 group-hover:text-white group-hover:border-red-600">
+                                  ✦ {tag}
+                                </span>
+                              ))}
                             </div>
 
-                            <p className="text-red-500 uppercase tracking-[5px] text-sm font-bold mb-4">
-                              Service 02
-                            </p>
-
-                            <div className="w-14 h-1 bg-red-500 rounded-full mb-6"></div>
-
-                            <h3 className="text-4xl md:text-5xl font-black mb-6">
-                              Graphic Design
-                            </h3>
-
-                            <p className="text-gray-400 text-lg leading-relaxed max-w-xl">
-                              I design posters, social media graphics, layouts, thumbnails, visual concepts, and branding materials that match the mood and purpose of each project.
+                            <p className="group/link relative mt-8 inline-flex items-center gap-2 text-white font-bold hover:text-red-500 hover:-translate-y-1 transition-all duration-300">
+                              <span>{service.cta}</span>
+                              <span className="transition-transform duration-300 group-hover/link:translate-x-1">→</span>
+                              <span className="absolute left-0 -bottom-1 h-[2px] w-0 bg-red-500 transition-all duration-300 group-hover/link:w-full"></span>
                             </p>
                           </div>
-
-                          <ul className="mt-6 space-y-3 text-gray-300">
-                            <li>✓ Posters and promotional layouts</li>
-                            <li>✓ Social media graphics</li>
-                            <li>✓ Visual concepts and branding materials</li>
-                          </ul>
-
-                          <div className="mt-10 flex flex-wrap gap-3">
-                            <span className="text-red-400 border border-red-800/70 px-4 py-2 rounded-full text-sm font-semibold">Posters</span>
-                            <span className="text-red-400 border border-red-800/70 px-4 py-2 rounded-full text-sm font-semibold">Layouts</span>
-                            <span className="text-red-400 border border-red-800/70 px-4 py-2 rounded-full text-sm font-semibold">Branding</span>
-                          </div>
-
-                          <p className="mt-8 text-white font-bold group-hover:text-red-500 transition-all">
-                            View Design Works →
-                          </p>
                         </div>
-                      </a>
-                    </div>
-                  )}
+                      </motion.a>
+                    ))}
+                  </div>
+                )}
 
-                  {activeServiceTab === "tools" && (
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                      {[
-                        {
-                          title: "Editing Tools",
-                          subtitle: "Software I use for cuts, pacing, color, motion, and storytelling.",
-                          tools: [
-                                  ["DaVinci Resolve", "Advanced", "85%", "🎞️"],
-                                  ["CapCut", "Advanced", "90%", "✂️"],
-                                  ["After Effects", "Intermediate", "65%", "✨"],
-                                  ["Alight Motion", "Expert", "95%", "📱"],
-                                ],
-                        },
-                        {
-                          title: "Design Tools",
-                          subtitle: "Tools I use for posters, layouts, graphics, and visual design.",
-                          tools: [
-                                  ["Canva", "Advanced", "90%", "🎨"],
-                                  ["Lightroom", "Intermediate", "75%", "📸"],
-                                  ["PicsArt", "Advanced", "85%", "🖼️"],
-                                  ["Photoshop", "Learning", "55%", "🧩"],
-                                ],
-                        },
-                      ].map((group, index) => (
-                        <div
-                          key={index}
-                          className="bg-[#0b0b0b] border border-red-950/60 rounded-3xl p-6 md:p-8 shadow-[0_0_35px_rgba(255,0,0,0.10)] hover:border-red-600/70 transition-all duration-500"
-                        >
-                          <div className="mb-8">
+                {activeServiceTab === "tools" && (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    {[
+                      {
+                        title: "Editing Tools",
+                        subtitle: "Software I use for cuts, pacing, color, motion, and storytelling.",
+                        tools: [
+                          ["DaVinci Resolve", "Advanced", "85%", "/logos/davinci resolve.jpg", "scale-130"],
+                          ["CapCut", "Advanced", "90%", "/logos/capcut.webp", ""],
+                          ["After Effects", "Intermediate", "65%", "/logos/after effect.jpg", ""],
+                          ["Alight Motion", "Expert", "95%", "/logos/alight motion.jpg", "scale-120"],
+                        ],
+                      },
+                      {
+                        title: "Design Tools",
+                        subtitle: "Tools I use for posters, layouts, graphics, and visual design.",
+                        tools: [
+                          ["Canva", "Advanced", "90%", "/logos/Canva.jpg", "scale-120"],
+                          ["Lightroom", "Intermediate", "75%", "/logos/lightroon.jpg", "scale-120"],
+                          ["PicsArt", "Advanced", "85%", "/logos/picsart.jpg", ""],
+                          ["Photoshop", "Learning", "55%", "/logos/Photo Shop.jpg", "scale-120"],
+                        ],
+                      },
+                    ].map((group, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, x: 50 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true, amount: 0.25 }}
+                        transition={{ duration: 0.7, delay: index * 0.15, ease: "easeOut" }}
+                        className="bg-[#0b0b0b] border border-red-950/60 rounded-3xl p-6 md:p-8 shadow-[0_0_35px_rgba(255,0,0,0.10)] hover:border-red-600/70 hover:-translate-y-2 hover:shadow-[0_0_45px_rgba(239,68,68,0.20)] transition-all duration-700"
+                      >
+                        <div className="mb-8">
+                          <h4 className="text-3xl font-black mb-3">{group.title}</h4>
+                          <p className="text-gray-400 leading-relaxed">{group.subtitle}</p>
+                        </div>
 
-                            <h4 className="text-3xl font-black mb-3">
-                              {group.title}
-                            </h4>
-
-                            <p className="text-gray-400 leading-relaxed">
-                              {group.subtitle}
-                            </p>
-                          </div>
-
-                          <div className="space-y-5">
-                            {group.tools.map((tool, i) => (
-                              <div
-                                key={i}
-                                className="group/tool bg-white/[0.03] border border-white/5 rounded-2xl p-5 hover:border-red-600/60 hover:bg-red-950/10 transition-all duration-300"
-                              >
-                                <div className="flex items-center justify-between gap-4 mb-4">
-                                  <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 rounded-2xl bg-red-600/10 border border-red-900/50 flex items-center justify-center overflow-hidden p-2">
-                                      <img
-                                        src={tool[3]}
-                                        alt={tool[0]}
-                                        className="w-full h-full object-contain"
-                                      />
-                                    </div>
-
-                                    <div>
-                                      <h5 className="font-black text-lg">
-                                        {tool[0]}
-                                      </h5>
-
-                                      <p className="text-gray-500 text-sm">
-                                        Skill Level
-                                      </p>
-                                    </div>
+                        <div className="space-y-5">
+                          {group.tools.map((tool, i) => (
+                            <motion.div
+                              key={i}
+                              initial={{ opacity: 0, y: 25 }}
+                              whileInView={{ opacity: 1, y: 0 }}
+                              viewport={{ once: true, amount: 0.25 }}
+                              transition={{ duration: 0.5, delay: i * 0.08, ease: "easeOut" }}
+                              className="group/tool bg-white/[0.03] border border-white/5 rounded-2xl p-5 hover:border-red-600/60 hover:bg-red-950/10 hover:-translate-y-1 transition-all duration-500"
+                            >
+                              <div className="flex items-center justify-between gap-4 mb-4">
+                                <div className="flex items-center gap-4">
+                                  <div className="w-14 h-14 rounded-2xl bg-red-600/10 border border-red-900/50 flex items-center justify-center overflow-hidden">
+                                    <img src={tool[3]} alt={tool[0]} className={`w-full h-full object-cover ${tool[4]}`} />
                                   </div>
 
-                                  <span
-                                    className={`flex items-center gap-2 text-sm font-bold px-3 py-1 rounded-full border ${
-                                      tool[1] === "Expert"
-                                        ? "text-red-400 border-red-700 bg-red-950/20"
-                                        : tool[1] === "Advanced"
-                                        ? "text-green-400 border-green-700 bg-green-950/20"
-                                        : tool[1] === "Intermediate"
-                                        ? "text-blue-400 border-blue-700 bg-blue-950/20"
-                                        : "text-gray-300 border-gray-600 bg-white/5"
-                                    }`}
-                                  >
-                                    <span
-                                      className={`w-2.5 h-2.5 rounded-full ${
-                                        tool[1] === "Expert"
-                                          ? "bg-red-500"
-                                          : tool[1] === "Advanced"
-                                          ? "bg-green-500"
-                                          : tool[1] === "Intermediate"
-                                          ? "bg-blue-500"
-                                          : "bg-gray-300"
-                                      }`}
-                                    ></span>
-
-                                    {tool[1]}
-                                  </span>
+                                  <div>
+                                    <h5 className="font-black text-lg group-hover/tool:text-red-500 transition-all duration-300">{tool[0]}</h5>
+                                    <p className="text-gray-500 text-sm">Skill Level</p>
+                                  </div>
                                 </div>
 
-                                <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden">
-                                  <div
-                                    className={`h-full rounded-full transition-all duration-500 ${
-                                      tool[1] === "Expert"
-                                        ? "bg-[#ff3b3b] shadow-[0_0_12px_rgba(255,59,59,.5)]"
-                                        : tool[1] === "Advanced"
-                                        ? "bg-[#22c55e] shadow-[0_0_12px_rgba(34,197,94,.4)]"
-                                        : tool[1] === "Intermediate"
-                                        ? "bg-[#3b82f6] shadow-[0_0_12px_rgba(59,130,246,.4)]"
-                                        : "bg-[#d1d5db]"
-                                    }`}
-                                    style={{ width: tool[2] }}
-                                  ></div>
-                                </div>
+                                <span className={`flex items-center gap-2 text-sm font-bold px-3 py-1 rounded-full border ${
+                                  tool[1] === "Expert"
+                                    ? "text-red-400 border-red-700 bg-red-950/20"
+                                    : tool[1] === "Advanced"
+                                    ? "text-green-400 border-green-700 bg-green-950/20"
+                                    : tool[1] === "Intermediate"
+                                    ? "text-blue-400 border-blue-700 bg-blue-950/20"
+                                    : "text-gray-300 border-gray-600 bg-white/5"
+                                }`}>
+                                  <span className={`w-2.5 h-2.5 rounded-full ${
+                                    tool[1] === "Expert"
+                                      ? "bg-red-500"
+                                      : tool[1] === "Advanced"
+                                      ? "bg-green-500"
+                                      : tool[1] === "Intermediate"
+                                      ? "bg-blue-500"
+                                      : "bg-gray-300"
+                                  }`}></span>
+                                  {tool[1]}
+                                </span>
                               </div>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
 
-            
+                              <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden">
+                                <div
+                                  className={`h-full rounded-full transition-all duration-1000 ${
+                                    tool[1] === "Expert"
+                                      ? "bg-[#ff3b3b] shadow-[0_0_12px_rgba(255,59,59,.5)]"
+                                      : tool[1] === "Advanced"
+                                      ? "bg-[#22c55e] shadow-[0_0_12px_rgba(34,197,94,.4)]"
+                                      : tool[1] === "Intermediate"
+                                      ? "bg-[#3b82f6] shadow-[0_0_12px_rgba(59,130,246,.4)]"
+                                      : "bg-[#d1d5db]"
+                                  }`}
+                                  style={{ width: tool[2] }}
+                                ></div>
+                              </div>
+                            </motion.div>
+                          ))}
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+              </motion.div>
+            </div>
+          </div>
         </section>
 
         <section id="about" className="relative min-h-screen px-6 md:px-12 py-28 bg-transparent overflow-hidden">
