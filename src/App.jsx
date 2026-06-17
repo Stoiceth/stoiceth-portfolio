@@ -396,8 +396,6 @@ const scrollToSection = (sectionId) => {
         </button>
       </div>
 
-      <div className="fixed md:hidden bottom-24 right-6 z-[9997]"></div>
-
       <nav className="fixed top-5 left-0 w-full z-50 px-4 md:px-8 animate-[navDrop_0.8s_ease-out]">
         <div
           className={`group relative max-w-7xl mx-auto h-20 px-4 md:px-6 flex justify-between items-center rounded-full overflow-hidden bg-black/35 backdrop-blur-2xl border border-white/15 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_0_35px_rgba(0,0,0,0.5)] transition-all duration-300 ${
