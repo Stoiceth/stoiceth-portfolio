@@ -137,3 +137,30 @@
     transform: translateY(0);
   }
 }
+
+@keyframes floatingOrbOne {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(80px, 120px) scale(1.15);
+  }
+}
+
+@keyframes floatingOrbTwo {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-100px, -80px) scale(1.2);
+  }
+}
+
+@keyframes floatingOrbThree {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(120px, -100px) scale(1.1);
+  }
+}

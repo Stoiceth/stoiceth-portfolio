@@ -1,10 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 import {
   FaFacebookF,
   FaInstagram,
-  FaGithub,
   FaTiktok,
 } from "react-icons/fa";
 
@@ -15,12 +14,14 @@ function App() {
   const [shineStyle, setShineStyle] = useState({left: "-20%", duration: 2,});
   const [activeSection, setActiveSection] = useState("home");
   const [spotlight, setSpotlight] = useState({x: 50, y: 50, active: false,});
-  const [darkMode, setDarkMode] = useState(true);
   const [parallax, setParallax] = useState({x: 0, y: 0,});
   const [mouseGlow, setMouseGlow] = useState({x: 0, y: 0,});
   const [showIntro, setShowIntro] = useState(true);
   const [typedLogo, setTypedLogo] = useState("");
   const [loadingStage, setLoadingStage] = useState("PREPARING EXPERIENCE");
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [introSkipped, setIntroSkipped] = useState(false);
   
 useEffect(() => {
   const randomShine = () => {
@@ -43,23 +44,37 @@ useEffect(() => {
   const sections = ["home", "works", "services", "about", "contact"];
 
   const handleScroll = () => {
+    let currentSection = "home";
+
     sections.forEach((section) => {
       const element = document.getElementById(section);
 
-      if (element) {
-        const rect = element.getBoundingClientRect();
+      if (!element) return;
 
-        if (rect.top <= 150 && rect.bottom >= 150) {
-          setActiveSection(section);
-        }
+      const offsetTop = element.offsetTop;
+      const sectionHeight = element.offsetHeight;
+      const scrollPosition = window.scrollY + 220;
+
+      if (
+        scrollPosition >= offsetTop &&
+        scrollPosition < offsetTop + sectionHeight
+      ) {
+        currentSection = section;
       }
     });
+
+    setActiveSection(currentSection);
   };
 
   window.addEventListener("scroll", handleScroll);
+  window.addEventListener("hashchange", handleScroll);
+
   handleScroll();
 
-  return () => window.removeEventListener("scroll", handleScroll);
+  return () => {
+    window.removeEventListener("scroll", handleScroll);
+    window.removeEventListener("hashchange", handleScroll);
+  };
 }, []);
 
   const navLinkClass = (section) =>
@@ -89,14 +104,30 @@ const animatedText = (text, extraClass = "", isRed = false) => (
 );
 
 useEffect(() => {
+  const introPlayed = sessionStorage.getItem("stoicethIntroPlayed");
+
+  if (introPlayed) {
+    setShowIntro(false);
+    setIntroSkipped(true);
+    return;
+  }
+
   const timer = setTimeout(() => {
     setShowIntro(false);
+    sessionStorage.setItem("stoicethIntroPlayed", "true");
   }, 3200);
 
   return () => clearTimeout(timer);
 }, []);
 
 useEffect(() => {
+  const introPlayed = sessionStorage.getItem("stoicethIntroPlayed");
+
+  if (introPlayed) {
+    setTypedLogo("STOICETH");
+    return;
+  }
+
   const text = "STOICETH";
   let index = 0;
 
@@ -127,7 +158,40 @@ useEffect(() => {
   };
 }, []);
 
+useEffect(() => {
+  const handleScrollProgress = () => {
+    const scrollTop = window.scrollY;
+    const docHeight =
+      document.documentElement.scrollHeight - window.innerHeight;
 
+    const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+
+    setScrollProgress(progress);
+    setShowScrollTop(scrollTop > window.innerHeight * 0.5);
+  };
+
+  window.addEventListener("scroll", handleScrollProgress);
+  handleScrollProgress();
+
+  return () => window.removeEventListener("scroll", handleScrollProgress);
+}, []);
+
+const scrollToSection = (sectionId) => {
+  const section = document.getElementById(sectionId);
+
+  if (section) {
+    setActiveSection(sectionId);
+
+    section.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+
+    window.history.replaceState(null, "", `#${sectionId}`);
+  }
+
+  setIsMenuOpen(false);
+};
 
   return (
     <div
@@ -139,6 +203,23 @@ useEffect(() => {
         });
       }}
     >
+
+      {/* Scroll Progress Bar */}
+      <div className="fixed top-0 left-0 w-full h-[3px] bg-transparent z-[9999]">
+        <div
+          className="h-full bg-gradient-to-r from-red-700 via-red-500 to-red-400 shadow-[0_0_12px_rgba(239,68,68,0.8)] transition-all duration-150 ease-out"
+          style={{ width: `${scrollProgress}%` }}
+        ></div>
+      </div>
+
+      {/* Floating Animated Background */}
+      <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+        <div className="absolute left-[-180px] top-[15%] w-[420px] h-[420px] rounded-full bg-red-600/10 blur-[130px] animate-[floatingOrbOne_24s_ease-in-out_infinite]"></div>
+
+        <div className="absolute right-[-220px] top-[45%] w-[500px] h-[500px] rounded-full bg-red-600/10 blur-[150px] animate-[floatingOrbTwo_28s_ease-in-out_infinite]"></div>
+
+        <div className="absolute left-[35%] bottom-[-220px] w-[520px] h-[520px] rounded-full bg-red-600/10 blur-[160px] animate-[floatingOrbThree_32s_ease-in-out_infinite]"></div>
+      </div>
 
       {showIntro && (
         <div className="fixed inset-0 z-[9999] bg-black flex items-center justify-center animate-[introSlideUp_0.9s_ease_2.4s_forwards]">
@@ -214,30 +295,30 @@ useEffect(() => {
             </h1>
           </div>
 
-          <div className="hidden md:flex gap-10 text-sm uppercase tracking-wider">
-            <a href="#home" className={navLinkClass("home")}>
+          <div className="hidden md:flex gap-10 text-m uppercase tracking-wider">
+            <button onClick={() => scrollToSection("home")} className={navLinkClass("home")}>
               Home
-            </a>
+            </button>
 
-            <a href="#works" className={navLinkClass("works")}>
+            <button onClick={() => scrollToSection("works")} className={navLinkClass("works")}>
               Works
-            </a>
+            </button>
 
-            <a href="#services" className={navLinkClass("services")}>
+            <button onClick={() => scrollToSection("services")} className={navLinkClass("services")}>
               Services
-            </a>
+            </button>
 
-            <a href="#about" className={navLinkClass("about")}>
+            <button onClick={() => scrollToSection("about")} className={navLinkClass("about")}>
               About
-            </a>
+            </button>
           </div>
 
-          <a
-            href="#contact"
+          <button
+            onClick={() => scrollToSection("contact")}
             className="hidden md:inline-flex bg-red-600 hover:bg-red-700 px-8 py-3 rounded-full font-semibold shadow-[0_0_25px_rgba(255,0,0,0.4)] hover:shadow-[0_0_40px_rgba(255,0,0,0.7)] transition-all duration-300 hover:scale-105"
           >
             Contact
-          </a>
+          </button>
 
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -249,60 +330,53 @@ useEffect(() => {
 
        {isMenuOpen && (
           <div className="md:hidden max-w-5xl mx-auto mt-3 px-5 py-6 bg-black/95 border border-white/10 rounded-3xl shadow-[0_0_35px_rgba(0,0,0,0.7)] backdrop-blur-md">
-
             <div className="flex flex-col gap-4 text-sm uppercase tracking-widest">
-
-              <a
-                onClick={() => setIsMenuOpen(false)}
-                href="#home"
-                className={
+              <button
+                onClick={() => scrollToSection("home")}
+                className={`text-left ${
                   activeSection === "home"
                     ? "text-red-500 font-bold"
                     : "text-gray-300 hover:text-red-500 transition-all"
-                }
+                }`}
               >
                 Home
-              </a>
+              </button>
 
-              <a
-                onClick={() => setIsMenuOpen(false)}
-                href="#works"
-                className={
+              <button
+                onClick={() => scrollToSection("works")}
+                className={`text-left ${
                   activeSection === "works"
                     ? "text-red-500 font-bold"
                     : "text-gray-300 hover:text-red-500 transition-all"
-                }
+                }`}
               >
                 Works
-              </a>
+              </button>
 
-              <a
-                onClick={() => setIsMenuOpen(false)}
-                href="#services"
-                className={
+              <button
+                onClick={() => scrollToSection("services")}
+                className={`text-left ${
                   activeSection === "services"
                     ? "text-red-500 font-bold"
                     : "text-gray-300 hover:text-red-500 transition-all"
-                }
+                }`}
               >
                 Services
-              </a>
+              </button>
 
-              <a
-                onClick={() => setIsMenuOpen(false)}
-                href="#about"
-                className={
+              <button
+                onClick={() => scrollToSection("about")}
+                className={`text-left ${
                   activeSection === "about"
                     ? "text-red-500 font-bold"
                     : "text-gray-300 hover:text-red-500 transition-all"
-                }
+                }`}
               >
                 About
-              </a>
+              </button>
 
-              <a
-                onClick={() => setIsMenuOpen(false)}
-                href="#contact"
+              <button
+                onClick={() => scrollToSection("contact")}
                 className={`mt-3 text-center px-5 py-3 rounded-full font-bold shadow-[0_0_25px_rgba(255,0,0,0.4)] transition-all ${
                   activeSection === "contact"
                     ? "bg-red-700 text-white"
@@ -310,10 +384,8 @@ useEffect(() => {
                 }`}
               >
                 Contact
-              </a>
-
+              </button>
             </div>
-
           </div>
         )}
       </nav>
@@ -321,28 +393,16 @@ useEffect(() => {
       <section
         id="home"
         className="relative min-h-screen pt-36 md:pt-28 lg:pt-20 flex items-center overflow-hidden"
-        onMouseMove={(e) => {
-          const rect = e.currentTarget.getBoundingClientRect();
-
-          const x = (e.clientX - rect.left) / rect.width - 0.5;
-          const y = (e.clientY - rect.top) / rect.height - 0.5;
-
-          setParallax({
-            x,
-            y,
-          });
-        }}
-        onMouseLeave={() => {
-          setParallax({
-            x: 0,
-            y: 0,
-          });
-        }}
       >
+
         <div className="relative z-10 max-w-screen-2xl mx-auto px-6 md:px-12 w-full min-h-[calc(100vh-80px)] flex flex-col lg:flex-row items-center justify-between">
           <div className="relative w-full">
             <div
-              className="absolute right-[-50px] top-[0px] w-[650px] h-[350px] rounded-full bg-red-600/30 blur-[120px] z-0 opacity-0 animate-[heroGlow_1.2s_ease_2.8s_forwards]"
+              className={`absolute right-[-50px] top-[0px] w-[650px] h-[350px] rounded-full bg-red-600/30 blur-[120px] z-0 opacity-0 ${
+                introSkipped
+                  ? "animate-[heroGlow_1.2s_ease_0.1s_forwards]"
+                  : "animate-[heroGlow_1.2s_ease_2.8s_forwards]"
+              }`}
               style={{
                 transform: `translate(${parallax.x * 25}px, ${parallax.y * 25}px)`,
                 transition: "transform 250ms ease-out",
@@ -350,7 +410,11 @@ useEffect(() => {
             ></div>
 
             <div
-              className="absolute right-[1000px] top-[-400px] w-[800px] h-[500px] rounded-full bg-red-600/30 blur-[120px] z-0 opacity-0 animate-[heroGlow_1.2s_ease_2.9s_forwards]"
+              className={`absolute right-[1000px] top-[-400px] w-[800px] h-[500px] rounded-full bg-red-600/30 blur-[120px] z-0 opacity-0 ${
+                introSkipped
+                  ? "animate-[heroGlow_1.2s_ease_0.2s_forwards]"
+                  : "animate-[heroGlow_1.2s_ease_2.9s_forwards]"
+              }`}
               style={{
                 transform: `translate(${parallax.x * 15}px, ${parallax.y * 15}px)`,
                 transition: "transform 250ms ease-out",
@@ -358,12 +422,24 @@ useEffect(() => {
             ></div>
 
             <div className="relative z-20 max-w-none">
-              <p className="uppercase tracking-[7px] text-red-500 text-xs md:text-sm font-bold mb-5 opacity-0 animate-[heroFadeUp_0.7s_ease_3.0s_forwards]">
+              <p
+                className={`uppercase tracking-[7px] text-red-500 text-xs md:text-sm font-bold mb-5 opacity-0 ${
+                  introSkipped
+                    ? "animate-[heroFadeUp_0.7s_ease_0.2s_forwards]"
+                    : "animate-[heroFadeUp_0.7s_ease_3.0s_forwards]"
+                }`}
+              >
                 Available for Freelance
               </p>
 
               <h1 className="font-black uppercase leading-[0.88] tracking-tight">
-                <div className="opacity-0 animate-[heroFadeUp_0.8s_ease_3.2s_forwards]">
+                <div
+                  className={`opacity-0 ${
+                    introSkipped
+                      ? "animate-[heroFadeUp_0.8s_ease_0.4s_forwards]"
+                      : "animate-[heroFadeUp_0.8s_ease_3.2s_forwards]"
+                  }`}
+                >
                   {animatedText(
                     "Freelance",
                     "block text-[2.8rem] sm:text-[4rem] lg:text-[5.8rem] xl:text-[6.2rem]",
@@ -380,21 +456,45 @@ useEffect(() => {
                     `,
                   }}
                 >
-                  <div className="opacity-0 animate-[heroFadeUp_0.8s_ease_3.4s_forwards]">
+                  <div
+                    className={`opacity-0 ${
+                      introSkipped
+                        ? "animate-[heroFadeUp_0.8s_ease_0.6s_forwards]"
+                        : "animate-[heroFadeUp_0.8s_ease_3.4s_forwards]"
+                    }`}
+                  >
                     {animatedText("Video Editor", "block", true)}
                   </div>
 
-                  <div className="opacity-0 animate-[heroFadeUp_0.8s_ease_3.6s_forwards]">
+                  <div
+                    className={`opacity-0 ${
+                      introSkipped
+                        ? "animate-[heroFadeUp_0.8s_ease_0.8s_forwards]"
+                        : "animate-[heroFadeUp_0.8s_ease_3.6s_forwards]"
+                    }`}
+                  >
                     {animatedText("& Designer", "block", true)}
                   </div>
                 </span>
               </h1>
 
-              <p className="text-gray-200 text-base md:text-xl max-w-xl leading-relaxed mt-8 mb-10 md:mb-12 opacity-0 animate-[heroFadeUp_0.8s_ease_3.8s_forwards]">
+              <p
+                className={`text-gray-200 text-base md:text-xl max-w-xl leading-relaxed mt-8 mb-10 md:mb-12 opacity-0 ${
+                  introSkipped
+                    ? "animate-[heroFadeUp_0.8s_ease_1.0s_forwards]"
+                    : "animate-[heroFadeUp_0.8s_ease_3.8s_forwards]"
+                }`}
+              >
                 Crafting cinematic edits, motion graphics, and visual stories that leave a lasting impression.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 w-full sm:w-auto opacity-0 animate-[heroFadeUp_0.8s_ease_4.0s_forwards]">
+              <div
+                className={`flex flex-col sm:flex-row gap-4 sm:gap-6 w-full sm:w-auto opacity-0 ${
+                  introSkipped
+                    ? "animate-[heroFadeUp_0.8s_ease_1.2s_forwards]"
+                    : "animate-[heroFadeUp_0.8s_ease_4.0s_forwards]"
+                }`}
+              >
                 <a
                   href="#works"
                   className="group relative inline-flex items-center justify-center gap-3 overflow-hidden bg-red-600 hover:bg-red-700 px-8 py-4 md:px-10 md:py-5 rounded-full font-bold shadow-[0_0_25px_rgba(255,0,0,0.4)] hover:shadow-[0_0_50px_rgba(255,0,0,0.75)] transition-all duration-300 hover:scale-105"
@@ -419,20 +519,32 @@ useEffect(() => {
               </div>
             </div>
 
+                
+
+
             <div
-              className="relative mt-12 xl:mt-0 mx-auto xl:absolute xl:right-[40px] 2xl:right-[-20px] xl:bottom-[-85px] z-30 flex justify-center w-fit opacity-0 animate-[heroImageReveal_1.2s_ease_4.2s_forwards]"
+              className={`relative mt-12 xl:mt-0 mx-auto xl:absolute xl:right-[40px] 2xl:right-[-20px] xl:bottom-[-85px] z-30 flex justify-center w-fit opacity-0 ${
+                introSkipped
+                  ? "animate-[heroImageReveal_1.2s_ease_1.4s_forwards]"
+                  : "animate-[heroImageReveal_1.2s_ease_4.2s_forwards]"
+              }`}
               onMouseEnter={() =>
                 setSpotlight((prev) => ({
                   ...prev,
                   active: true,
                 }))
               }
-              onMouseLeave={() =>
+              onMouseLeave={() => {
                 setSpotlight((prev) => ({
                   ...prev,
                   active: false,
-                }))
-              }
+                }));
+
+                setParallax({
+                  x: 0,
+                  y: 0,
+                });
+              }}
               onMouseMove={(e) => {
                 const rect = e.currentTarget.getBoundingClientRect();
 
@@ -441,42 +553,69 @@ useEffect(() => {
                   y: ((e.clientY - rect.top) / rect.height) * 100,
                   active: true,
                 });
+
+                const x = (e.clientX - rect.left) / rect.width - 0.5;
+                const y = (e.clientY - rect.top) / rect.height - 0.5;
+
+                setParallax({
+                  x,
+                  y,
+                });
               }}
             >
-              <div className="absolute right-[18%] top-[20%] w-48 h-48 rounded-full bg-red-600/15 blur-[100px]"></div>
-
-              <img
-                src="/images/zeth.png"
-                alt="Stoiceth"
-                className="relative z-10 w-[220px] sm:w-[280px] md:w-[340px] lg:w-[380px] xl:w-[46vw] max-w-[700px] object-contain brightness-[0.18] contrast-[1.08] saturate-[0.9] animate-[float_6s_ease-in-out_infinite]"
-              />
-
-              <img
-                src="/images/zeth.png"
-                alt=""
-                className="absolute inset-0 z-20 w-[220px] sm:w-[280px] md:w-[340px] lg:w-[380px] xl:w-[46vw] max-w-[700px] object-contain pointer-events-none animate-[float_6s_ease-in-out_infinite]"
+              <div
+                className="relative"
                 style={{
-                  WebkitMaskImage: spotlight.active
-                    ? `radial-gradient(circle at ${spotlight.x}% ${spotlight.y}%, black 0%, black 28%, rgba(0,0,0,0.55) 45%, transparent 68%)`
-                    : "radial-gradient(circle at 50% 50%, transparent 0%, transparent 100%)",
-                  maskImage: spotlight.active
-                    ? `radial-gradient(circle at ${spotlight.x}% ${spotlight.y}%, black 0%, black 18%, rgba(0,0,0,0.6) 32%, transparent 50%)`
-                    : "radial-gradient(circle at 50% 50%, transparent 0%, transparent 100%)",
-                  filter: "brightness(1.35) contrast(1.08) saturate(1.08)",
-                  transition:
-                    "mask-image 120ms ease-out, -webkit-mask-image 120ms ease-out, opacity 250ms ease-out",
-                  opacity: spotlight.active ? 1 : 0,
+                  transform: `translate(${parallax.x * -35}px, ${parallax.y * -25}px)`,
+                  transition: "transform 250ms ease-out",
                 }}
-              />
+              >
+                <div
+                  className="absolute right-[18%] top-[20%] w-48 h-48 rounded-full bg-red-600/15 blur-[100px]"
+                  style={{
+                    transform: `translate(${parallax.x * -25}px, ${parallax.y * -18}px)`,
+                    transition: "transform 250ms ease-out",
+                  }}
+                ></div>
+
+                <img
+                  src="/images/zeth.png"
+                  alt="Stoiceth"
+                  className="relative z-10 w-[220px] sm:w-[280px] md:w-[340px] lg:w-[380px] xl:w-[46vw] max-w-[700px] object-contain brightness-[0.18] contrast-[1.08] saturate-[0.9] animate-[float_6s_ease-in-out_infinite]"
+                />
+
+                <img
+                  src="/images/zeth.png"
+                  alt=""
+                  className="absolute inset-0 z-20 w-[220px] sm:w-[280px] md:w-[340px] lg:w-[380px] xl:w-[46vw] max-w-[700px] object-contain pointer-events-none animate-[float_6s_ease-in-out_infinite]"
+                  style={{
+                    WebkitMaskImage: spotlight.active
+                      ? `radial-gradient(circle at ${spotlight.x}% ${spotlight.y}%, black 0%, black 28%, rgba(0,0,0,0.55) 45%, transparent 68%)`
+                      : "radial-gradient(circle at 50% 50%, transparent 0%, transparent 100%)",
+                    maskImage: spotlight.active
+                      ? `radial-gradient(circle at ${spotlight.x}% ${spotlight.y}%, black 0%, black 18%, rgba(0,0,0,0.6) 32%, transparent 50%)`
+                      : "radial-gradient(circle at 50% 50%, transparent 0%, transparent 100%)",
+                    filter: "brightness(1.35) contrast(1.08) saturate(1.08)",
+                    transition:
+                      "mask-image 120ms ease-out, -webkit-mask-image 120ms ease-out, opacity 250ms ease-out",
+                    opacity: spotlight.active ? 1 : 0,
+                  }}
+                />
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-50 text-[10px] sm:text-xs md:text-base uppercase tracking-wide md:tracking-widest text-gray-200 text-center px-4 opacity-0 animate-[heroFadeUp_0.8s_ease_4.3s_forwards]">
+        <div
+          className={`absolute bottom-5 left-1/2 -translate-x-1/2 z-50 text-[10px] sm:text-xs md:text-base uppercase tracking-wide md:tracking-widest text-gray-200 text-center px-4 opacity-0 ${
+            introSkipped
+              ? "animate-[heroFadeUp_0.8s_ease_1.5s_forwards]"
+              : "animate-[heroFadeUp_0.8s_ease_4.3s_forwards]"
+          }`}
+        >
           Video Editor • Designer • Filmmaker
         </div>
       </section>
-
 
 
 
@@ -938,7 +1077,7 @@ useEffect(() => {
                               transition={{ duration: 0.5, delay: i * 0.08, ease: "easeOut" }}
                               className="group/tool bg-white/[0.03] border border-white/5 rounded-2xl p-5 hover:border-red-600/60 hover:bg-red-950/10 hover:-translate-y-1 transition-all duration-500"
                             >
-                              <div className="flex items-center justify-between gap-4 mb-4">
+                              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
                                 <div className="flex items-center gap-4">
                                   <div className="w-14 h-14 rounded-2xl bg-red-600/10 border border-red-900/50 flex items-center justify-center overflow-hidden">
                                     <img src={tool[3]} alt={tool[0]} className={`w-full h-full object-cover ${tool[4]}`} />
@@ -950,7 +1089,7 @@ useEffect(() => {
                                   </div>
                                 </div>
 
-                                <span className={`flex items-center gap-2 text-sm font-bold px-3 py-1 rounded-full border ${
+                                <span className={`w-fit flex items-center gap-2 text-xs sm:text-sm font-bold px-3 py-1 rounded-full border ${
                                   tool[1] === "Expert"
                                     ? "text-red-400 border-red-700 bg-red-950/20"
                                     : tool[1] === "Advanced"
@@ -1003,41 +1142,81 @@ useEffect(() => {
           <div className="absolute right-[-200px] bottom-[100px] w-[500px] h-[500px] rounded-full bg-red-600/10 blur-[140px]"></div>
 
           <div className="relative z-10 max-w-screen-2xl mx-auto">
-            <div className="text-center mb-16">
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.7, ease: "easeOut" }}
+              className="text-center mb-16"
+            >
               <p className="text-red-500 uppercase tracking-[6px] text-sm font-bold mb-4">
                 About Me
               </p>
 
               <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tight mb-5">
-                More Than Just an Editor
+                The Story Behind The Editor
               </h2>
 
               <p className="text-gray-400 max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
-                I create visuals with purpose, emotion, and story.
+                A creative journey built on editing, storytelling, and visual design.
               </p>
-            </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ scaleX: 0, opacity: 0 }}
+              whileInView={{ scaleX: 1, opacity: 1 }}
+              viewport={{ once: true, amount: 0.5 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="w-32 h-[2px] bg-gradient-to-r from-transparent via-red-500 to-transparent mx-auto mb-16 opacity-80 shadow-[0_0_12px_rgba(239,68,68,0.5)]"
+            />
 
             <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-14 items-center">
-              <div className="relative max-w-[560px] mx-auto w-full">
+              <motion.div
+                initial={{ opacity: 0, x: -80, rotate: -4, scale: 0.95 }}
+                whileInView={{ opacity: 1, x: 0, rotate: 0, scale: 1 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="relative max-w-[560px] mx-auto w-full"
+              >
                 <div className="absolute inset-0 bg-red-600/20 blur-[100px] rounded-full"></div>
 
-                <div className="relative bg-[#0b0b0b] border border-red-950/60 rounded-3xl overflow-hidden shadow-[0_0_35px_rgba(255,0,0,0.15)] aspect-[4/5]">
+                <div className="relative bg-[#0b0b0b] border border-red-950/60 rounded-3xl overflow-hidden shadow-[0_0_45px_rgba(255,0,0,0.18)] aspect-[4/5] group">
                   <img
                     src="/images/zeth 2.jpg"
-                    alt="The Director"
-                    className="w-full h-full object-cover hover:scale-105 transition-all duration-500"
+                    alt="Stoiceth"
+                    className="w-full h-full object-cover group-hover:scale-105 group-hover:brightness-110 transition-all duration-700 ease-out"
                   />
-                </div>
-              </div>
 
-              <div>
-                <h3 className="text-3xl md:text-5xl font-black mb-6">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+
+                  <div className="absolute bottom-6 left-6 right-6">
+                    <p className="text-red-500 uppercase tracking-[4px] text-xs font-bold mb-2">
+                      Stoiceth
+                    </p>
+                    <h3 className="text-2xl s:text-3xl font-black">
+                      Video Editor • Designer • Filmmaker
+                    </h3>
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, x: 80 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+              >
+                <p className="text-red-500 uppercase tracking-[5px] text-sm font-bold mb-4">
+                  Who I Am
+                </p>
+
+                <h3 className="text-3xl md:text-5xl font-black mb-6 leading-tight">
                   Hi, I'm <span className="text-red-500">Stoiceth</span>.
                 </h3>
 
                 <div className="space-y-5 text-gray-400 text-base md:text-lg leading-relaxed mb-8">
                   <p>
-                    My name is Zeth Laurence Manalo, a Bachelor of Science in Computer Engineering student and a creative video editor based in the Philippines.
+                    My name is Zeth Laurence Manalo, a Bachelor of Science in Computer Engineering student and a freelance creative based in the Philippines.
                   </p>
 
                   <p>
@@ -1045,81 +1224,59 @@ useEffect(() => {
                   </p>
 
                   <p>
-                    As part of the CETSO Creative Committee, I work on video editing, videography, and creative documentation. I also directed, wrote, produced, and edited my own short film titled PAGLAHUTAY.
+                    As part of the CETSO Creative Committee, I work on video editing, videography, and creative documentation. I also directed, wrote, produced, and edited my own short film titled <span className="text-white font-semibold">PAGLAHUTAY</span>.
                   </p>
                 </div>
 
                 <div className="mb-8">
                   <h4 className="text-2xl font-black mb-8">
-                    AT A GLANCE
+                    At A Glance
                   </h4>
 
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
+                    {[
+                      ["Since", "2020", "Started Video Editing"],
+                      ["Experience", "6+", "Years of Experience"],
+                      ["Position", "Creative Committee", "CETSO"],
+                      ["Education", "BSCpE", "Computer Engineering"],
+                      ["Project", "PAGLAHUTAY", "Director & Editor"],
+                      ["Based In", "Philippines", "Freelance Creative"],
+                    ].map((item, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, y: 35 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.3 }}
+                        transition={{
+                          duration: 0.5,
+                          delay: index * 0.08,
+                          ease: "easeOut",
+                        }}
+                        className="group bg-white/5 border border-red-950/60 rounded-2xl p-5 hover:border-red-600 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(255,0,0,0.15)] transition-all duration-500"
+                      >
+                        <p className="text-xs uppercase tracking-[3px] text-red-500 mb-2">
+                          {item[0]}
+                        </p>
 
-                    <div className="bg-white/5 border border-red-950/60 rounded-2xl p-5 hover:border-red-600 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(255,0,0,0.15)] transition-all duration-300">
-                      <p className="text-xs uppercase tracking-[3px] text-red-500 mb-2">
-                        Since
-                      </p>
-                      <h5 className="font-bold text-lg">2020</h5>
-                      <p className="text-gray-400 text-sm">
-                        Started Video Editing 
-                      </p>
-                    </div>
+                        <h5 className="font-bold text-lg group-hover:text-red-500 transition-all duration-300">
+                          {item[1]}
+                        </h5>
 
-                    <div className="bg-white/5 border border-red-950/60 rounded-2xl p-5 hover:border-red-600 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(255,0,0,0.15)] transition-all duration-300">
-                      <p className="text-xs uppercase tracking-[3px] text-red-500 mb-2">
-                        Experience
-                      </p>
-                      <h5 className="font-bold text-lg">6+</h5>
-                      <p className="text-gray-400 text-sm">
-                        Years of Experience
-                      </p>
-                    </div>
-
-                    <div className="bg-white/5 border border-red-950/60 rounded-2xl p-5 hover:border-red-600 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(255,0,0,0.15)] transition-all duration-300">
-                      <p className="text-xs uppercase tracking-[3px] text-red-500 mb-2">
-                        Position
-                      </p>
-                      <h5 className="font-bold text-lg">Creative Committee</h5>
-                      <p className="text-gray-400 text-sm">
-                        CETSO 
-                      </p>
-                    </div>
-
-                    <div className="bg-white/5 border border-red-950/60 rounded-2xl p-5 hover:border-red-600 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(255,0,0,0.15)] transition-all duration-300">
-                      <p className="text-xs uppercase tracking-[3px] text-red-500 mb-2">
-                        Education
-                      </p>
-                      <h5 className="font-bold text-lg">BSCpE</h5>
-                      <p className="text-gray-400 text-sm">
-                        Computer Engineering
-                      </p>
-                    </div>
-
-                    <div className="bg-white/5 border border-red-950/60 rounded-2xl p-5 hover:border-red-600 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(255,0,0,0.15)] transition-all duration-300">
-                      <p className="text-xs uppercase tracking-[3px] text-red-500 mb-2">
-                        Project
-                      </p>
-                      <h5 className="font-bold text-lg">PAGLAHUTAY</h5>
-                      <p className="text-gray-400 text-sm">
-                        Director & Editor
-                      </p>
-                    </div>
-
-                    <div className="bg-white/5 border border-red-950/60 rounded-2xl p-5 hover:border-red-600 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(255,0,0,0.15)] transition-all duration-300">
-                      <p className="text-xs uppercase tracking-[3px] text-red-500 mb-2">
-                        Based In
-                      </p>
-                      <h5 className="font-bold text-lg">Philippines</h5>
-                      <p className="text-gray-400 text-sm">
-                        Freelance Creative
-                      </p>
-                    </div>
-
+                        <p className="text-gray-400 text-sm">
+                          {item[2]}
+                        </p>
+                      </motion.div>
+                    ))}
                   </div>
                 </div>
 
-                <div className="flex flex-wrap gap-5">
+                <motion.div
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.3 }}
+                  transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+                  className="flex flex-wrap gap-5"
+                >
                   <a
                     href="/resume.pdf"
                     target="_blank"
@@ -1127,7 +1284,7 @@ useEffect(() => {
                   >
                     <span className="absolute inset-0 bg-white/20 translate-x-[-120%] group-hover:translate-x-[120%] transition-transform duration-700 skew-x-12"></span>
                     <span className="relative z-10">Download Resume</span>
-                    <span className="relative z-10 group-hover:translate-x-1 transition-transform duration-300">
+                    <span className="relative z-10 group-hover:translate-y-1 transition-transform duration-300">
                       ↓
                     </span>
                   </a>
@@ -1142,8 +1299,8 @@ useEffect(() => {
                       →
                     </span>
                   </a>
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
             </div>
           </div>
         </section>
@@ -1154,15 +1311,26 @@ useEffect(() => {
 
           <div className="relative z-10 max-w-screen-2xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-14 items-center">
-              
-              <div className="space-y-8">
-                <div className="inline-flex items-center gap-3 text-green-400 text-sm font-bold">
+              <motion.div
+                initial={{ opacity: 0, x: -70 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="space-y-8"
+              >
+                <motion.div
+                  initial={{ opacity: 0, y: 25 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.1 }}
+                  className="inline-flex items-center gap-3 text-green-400 text-sm font-bold bg-green-500/10 border border-green-500/20 px-4 py-2 rounded-full"
+                >
                   <span className="relative flex h-3 w-3">
                     <span className="absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75 animate-ping"></span>
                     <span className="relative inline-flex rounded-full h-3 w-3 bg-green-400"></span>
                   </span>
                   Available for Freelance
-                </div>
+                </motion.div>
 
                 <div>
                   <p className="text-red-500 uppercase tracking-[6px] text-sm font-bold mb-5">
@@ -1187,158 +1355,188 @@ useEffect(() => {
                   </p>
                 </div>
 
-                <p className="italic text-gray-400 text-lg">
-                  “Turning ideas into visuals that people remember.”
-                </p>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-xl">
-                  <div className="bg-white/5 border border-red-950/60 rounded-2xl p-5 hover:border-red-600 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(255,0,0,0.15)] transition-all duration-300">
-                    <h3 className="text-2xl font-black text-red-500">6+</h3>
-                    <p className="text-gray-400 text-sm">Years Editing</p>
-                  </div>
-
-                  <div className="bg-white/5 border border-red-950/60 rounded-2xl p-5 hover:border-red-600 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(255,0,0,0.15)] transition-all duration-300">
-                    <h3 className="text-2xl font-black text-red-500">2020</h3>
-                    <p className="text-gray-400 text-sm">Started</p>
-                  </div>
-
-                  <div className="bg-white/5 border border-red-950/60 rounded-2xl p-5 hover:border-red-600 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(255,0,0,0.15)] transition-all duration-300">
-                    <h3 className="text-2xl font-black text-red-500">24h</h3>
-                    <p className="text-gray-400 text-sm">Response</p>
-                  </div>
+                <div className="relative border-l-2 border-red-600/50 pl-5">
+                  <p className="italic text-gray-300 text-lg">
+                    “Turning ideas into visuals that people remember.”
+                  </p>
                 </div>
 
-                <a
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-xl">
+                  {[
+                    ["6+", "Years Editing"],
+                    ["2020", "Started"],
+                    ["24h", "Response"],
+                  ].map((item, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                      className="group bg-white/5 border border-red-950/60 rounded-2xl p-5 hover:border-red-600 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(255,0,0,0.15)] transition-all duration-500"
+                    >
+                      <h3 className="text-2xl font-black text-red-500 group-hover:scale-105 transition-all duration-300">
+                        {item[0]}
+                      </h3>
+                      <p className="text-gray-400 text-sm">{item[1]}</p>
+                    </motion.div>
+                  ))}
+                </div>
+
+                <motion.a
+                  initial={{ opacity: 0, y: 35 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.35 }}
                   href="mailto:zethlaurencemanalo@gmail.com"
                   className="group relative inline-flex items-center gap-3 overflow-hidden bg-red-600 hover:bg-red-700 px-8 py-4 rounded-full font-bold shadow-[0_0_25px_rgba(255,0,0,0.4)] hover:shadow-[0_0_50px_rgba(255,0,0,0.75)] transition-all duration-300 hover:scale-105"
                 >
                   <span className="absolute inset-0 bg-white/20 translate-x-[-120%] group-hover:translate-x-[120%] transition-transform duration-700 skew-x-12"></span>
                   <span className="relative z-10">Start a Project</span>
                   <span className="relative z-10 group-hover:translate-x-1 transition-transform duration-300">→</span>
-                </a>
-              </div>
+                </motion.a>
+              </motion.div>
 
-              <div className="bg-[#0b0b0b] border border-red-950/60 rounded-3xl p-6 md:p-8 shadow-[0_0_35px_rgba(255,0,0,0.12)] hover:border-red-600/60 hover:-translate-y-2 hover:shadow-[0_0_45px_rgba(255,0,0,0.18)] transition-all duration-500">
-                <div className="space-y-5">
-                  
-                  <div className="group flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-5">
-                    <div>
-                      <p className="text-red-500 uppercase tracking-[4px] text-xs font-bold mb-2">
-                        Email
-                      </p>
+              <motion.div
+                initial={{ opacity: 0, x: 70, scale: 0.96 }}
+                whileInView={{ opacity: 1, x: 0, scale: 1 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="relative bg-[#0b0b0b]/90 backdrop-blur-xl border border-red-950/60 rounded-3xl p-6 md:p-8 shadow-[0_0_35px_rgba(255,0,0,0.12)] hover:border-red-600/60 hover:-translate-y-2 hover:shadow-[0_0_45px_rgba(255,0,0,0.18)] transition-all duration-500 overflow-hidden"
+              >
+                <div className="absolute right-[-120px] top-[-120px] w-[300px] h-[300px] bg-red-600/20 rounded-full blur-[100px]"></div>
 
-                      <div className="inline-block">
-                        <h3 className="text-xl md:text-2xl font-black break-all">
-                          zethlaurencemanalo@gmail.com
-                        </h3>
-                        <div className="w-0 h-[2px] bg-red-500 group-hover:w-full transition-all duration-500"></div>
-                      </div>
-                    </div>
-
-                    <a
-                      href="mailto:zethlaurencemanalo@gmail.com"
-                      className="text-gray-400 group-hover:text-red-500 transition-all"
+                <div className="relative z-10 space-y-5">
+                  {[
+                    {
+                      label: "Email",
+                      title: "zethlaurencemanalo@gmail.com",
+                      desc: "Email Me →",
+                      href: "mailto:zethlaurencemanalo@gmail.com",
+                    },
+                    {
+                      label: "Location",
+                      title: "Philippines",
+                      desc: "Available remotely",
+                    },
+                    {
+                      label: "Availability",
+                      title: "Open for Freelance",
+                      desc: "Projects & collaborations",
+                    },
+                    {
+                      label: "Response",
+                      title: "Within 24 Hours",
+                      desc: "Usually active online",
+                    },
+                  ].map((item, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, x: 35 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                      className="group flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-5 last:border-b-0 last:pb-2 hover:pl-2 transition-all duration-300"
                     >
-                      Email Me →
-                    </a>
-                  </div>
+                      <div>
+                        <p className="text-red-500 uppercase tracking-[4px] text-xs font-bold mb-2">
+                          {item.label}
+                        </p>
 
-                  <div className="group flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-5 hover:pl-2 transition-all duration-300">
-                    <div>
-                      <p className="text-red-500 uppercase tracking-[4px] text-xs font-bold mb-2">
-                        Location
-                      </p>
-                      <h3 className="text-xl md:text-2xl font-black">
-                        Philippines
-                      </h3>
-                    </div>
+                        <div className="inline-block">
+                          <h3 className="text-xl md:text-2xl font-black break-all group-hover:text-red-500 transition-all duration-300">
+                            {item.title}
+                          </h3>
+                          <div className="w-0 h-[2px] bg-red-500 group-hover:w-full transition-all duration-500"></div>
+                        </div>
+                      </div>
 
-                    <p className="text-gray-400">
-                      Available remotely
-                    </p>
-                  </div>
-
-                  <div className="group flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-5 hover:pl-2 transition-all duration-300">
-                    <div>
-                      <p className="text-red-500 uppercase tracking-[4px] text-xs font-bold mb-2">
-                        Availability
-                      </p>
-                      <h3 className="text-xl md:text-2xl font-black">
-                        Open for Freelance
-                      </h3>
-                    </div>
-
-                    <p className="text-gray-400">
-                      Projects & collaborations
-                    </p>
-                  </div>
-
-                  <div className="group flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 hover:pl-2 transition-all duration-300">
-                    <div>
-                      <p className="text-red-500 uppercase tracking-[4px] text-xs font-bold mb-2">
-                        Response
-                      </p>
-                      <h3 className="text-xl md:text-2xl font-black">
-                        Within 24 Hours
-                      </h3>
-                    </div>
-
-                    <p className="text-gray-400">
-                      Usually active online
-                    </p>
-                  </div>
+                      {item.href ? (
+                        <a href={item.href} className="text-gray-400 group-hover:text-red-500 transition-all">
+                          {item.desc}
+                        </a>
+                      ) : (
+                        <p className="text-gray-400">{item.desc}</p>
+                      )}
+                    </motion.div>
+                  ))}
                 </div>
 
-                <div className="mt-10 pt-8 border-t border-white/10">
-                  <p className="text-gray-400 mb-5">
-                    Connect with me
-                  </p>
+                <div className="relative z-10 mt-10 pt-8 border-t border-white/10">
+                  <p className="text-gray-400 mb-5">Connect with me</p>
 
                   <div className="flex flex-wrap gap-4">
                     {[
                       {
                         icon: <FaFacebookF />,
-                        link: "https://facebook.com/yourprofile",
+                        link: "https://www.facebook.com/share/1AgowuTEAL/",
                       },
                       {
                         icon: <FaTiktok />,
-                        link: "https://tiktok.com/@yourprofile",
+                        link: "https://www.tiktok.com/@stoiceth?_r=1&_t=ZS-97FJgtYxWCt",
                       },
                       {
                         icon: <FaInstagram />,
-                        link: "https://instagram.com/yourprofile",
+                        link: "https://www.instagram.com/stoiceth?igsh=MXhiZGJtNHlhcjN0ZQ==",
                       },
                     ].map((item, index) => (
-                      <a
+                      <motion.a
                         key={index}
+                        initial={{ opacity: 0, y: 25 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.4, delay: index * 0.1 }}
                         href={item.link}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-12 h-12 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-xl hover:border-red-600 hover:text-red-500 hover:scale-110 hover:rotate-6 hover:shadow-[0_0_20px_rgba(255,0,0,0.25)] transition-all duration-300"
                       >
                         {item.icon}
-                      </a>
+                      </motion.a>
                     ))}
                   </div>
                 </div>
-              </div>
+              </motion.div>
             </div>
 
-            <footer className="mt-24 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between gap-4 text-gray-500 text-sm">
-              <p className="font-bold tracking-[4px] text-white">
-                STOI<span className="text-red-500">C</span>ETH
-              </p>
+            <div className="mt-24">
+              <div className="w-full h-px bg-gradient-to-r from-transparent via-red-500/50 to-transparent mb-8"></div>
 
-              <p>
-                © 2026 Stoiceth. All rights reserved.
-              </p>
+              <motion.footer
+                initial={{ opacity: 0, y: 35 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, delay: 0.25 }}
+                className="flex flex-col md:flex-row justify-between items-center gap-4 text-gray-500 text-sm"
+              >
+                <p className="font-bold tracking-[4px] text-white">
+                  STOI<span className="text-red-500">C</span>ETH
+                </p>
 
-              <p>
-                Video Editor • Designer • Filmmaker
-              </p>
-            </footer>
+                <p>© 2026 Stoiceth. All rights reserved.</p>
+
+                <p>Video Editor • Designer • Filmmaker</p>
+              </motion.footer>
+            </div>
           </div>
         </section>
+
+        {/* Scroll To Top Button */}
+        <button
+          onClick={() => {
+            document.getElementById("home")?.scrollIntoView({
+              behavior: "smooth",
+            });
+          }}
+          className={`fixed bottom-6 right-6 z-[9998] w-12 h-12 rounded-full bg-red-600 border border-red-400/40 text-white font-black shadow-[0_0_25px_rgba(239,68,68,0.45)] transition-all duration-500 hover:bg-red-700 hover:scale-110 hover:-translate-y-1 hover:shadow-[0_0_40px_rgba(239,68,68,0.8)] ${
+            showScrollTop
+              ? "opacity-100 translate-y-0 pointer-events-auto"
+              : "opacity-0 translate-y-5 pointer-events-none"
+          }`}
+        >
+          ↑
+        </button>
+
     </div>
   );
 }
