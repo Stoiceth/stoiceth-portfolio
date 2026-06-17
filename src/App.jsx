@@ -351,7 +351,7 @@ const scrollToSection = (sectionId) => {
     />
 
       {/* Floating Accent Picker */}
-      <div className="fixed bottom-24 right-6 z-[9997] hidden md:flex flex-col items-center gap-3">
+      <div className="fixed bottom-24 right-6 z-[9997] flex flex-col items-center gap-3">
         <div
           className={`flex flex-col-reverse gap-3 mb-2 transition-all duration-300 ${
             showAccentPicker
