@@ -164,3 +164,12 @@
     transform: translate(120px, -100px) scale(1.1);
   }
 }
+
+@keyframes toolMarquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-33.333% - 12px));
+  }
+}
