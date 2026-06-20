@@ -1168,7 +1168,7 @@ const scrollToSection = (sectionId) => {
               </p>
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-[1.2fr_0.9fr_0.9fr] gap-8 mb-12">
+            <div className="grid grid-cols-1 md:grid-cols-3 items-stretch gap-8 mb-12">
               {[
                 {
                   number: "01",
@@ -1199,7 +1199,7 @@ const scrollToSection = (sectionId) => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.25 }}
                   transition={{ duration: 0.7, delay: index * 0.12, ease: "easeOut" }}
-                  className={`group relative min-h-[420px] overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] p-8 md:p-9 hover:bg-white/[0.055] hover:-translate-y-2 transition-all duration-700 ${
+                  className={`group relative flex flex-col h-full min-h-[420px] overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] p-8 md:p-9 hover:bg-white/[0.055] hover:-translate-y-2 transition-all duration-700 ${
                     accentColor === "red"
                       ? "hover:border-red-500/50 hover:shadow-[0_0_50px_rgba(239,68,68,0.16)]"
                       : accentColor === "blue"
@@ -1225,7 +1225,7 @@ const scrollToSection = (sectionId) => {
                     }`}
                   ></div>
 
-                  <div className="relative z-10 flex h-full flex-col justify-between">
+                  <div className="relative z-10 flex flex-1 flex-col justify-between">
                     <div>
                       <p className={`${accent.text} text-sm font-bold tracking-[5px] mb-10`}>
                         {service.number}
@@ -1498,7 +1498,7 @@ const scrollToSection = (sectionId) => {
             ))}
           </div>
 
-          {/* BOTTOM MATRIX QUICK-LINKS SECTION */}
+          {/* QUICK LINKS GRID BLOCK */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 mt-12">
             {[
               {
@@ -1560,18 +1560,6 @@ const scrollToSection = (sectionId) => {
                           video: project[3],
                         });
                       }}
-                      /* Plays video cleanly on hover, resets to frame 0 when leaving */
-                      onMouseEnter={(e) => {
-                        const video = e.currentTarget.querySelector("video");
-                        if (video) video.play().catch(() => {});
-                      }}
-                      onMouseLeave={(e) => {
-                        const video = e.currentTarget.querySelector("video");
-                        if (video) {
-                          video.pause();
-                          video.currentTime = 0; 
-                        }
-                      }}
                       className="group text-left flex flex-row sm:flex-col items-center sm:items-start gap-4 sm:gap-0"
                     >
                       {/* Aspect Ratio Box Wrapper */}
@@ -1586,10 +1574,11 @@ const scrollToSection = (sectionId) => {
                       }`}>
                         <video
                           src={project[3]}
+                          autoPlay
                           muted
                           loop
                           playsInline
-                          preload="metadata"
+                          preload="auto"
                           className="w-full h-full object-cover opacity-40 group-hover:opacity-100 group-hover:scale-[1.05] transition-all duration-700 ease-[cubic-bezier(.19,1,.22,1)]"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-transparent to-transparent"></div>
