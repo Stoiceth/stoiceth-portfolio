@@ -61,6 +61,43 @@ function App() {
   const [messageStatus, setMessageStatus] = useState("");
   const [isSending, setIsSending] = useState(false);
 
+const bottomMatrixGroups = [
+  {
+    id: "short-form",
+    title: "Short-form Editing Overview",
+    projects: [
+      {
+        number: "01",
+        title: "Product Promo Edit",
+        type: "TikTok / Reels",
+        video: "/previews/V1.mp4",
+        challenge: "Hook a fast-scrolling viewer within 1.5 seconds and maintain high pacing for a physical product drop.",
+        strategy: "Used aggressive sound design, custom kinetic typography, and a seamless 0.5-second loop to trick the algorithm into double-views.",
+        metric: "Retained 72% viewers past the 5-sec mark"
+      },
+      {
+        number: "02",
+        title: "Lifestyle Reel",
+        type: "Instagram Reel",
+        video: "/previews/V2.mp4",
+        challenge: "Elevate raw daily vlog footage into an aspirational, cinematic story that fits a premium brand image.",
+        strategy: "Applied custom color grading lut paths, smooth speed ramps, and rhythmic beat-matching transitions.",
+        metric: "+45% Avg. Watch Time Increase"
+      },
+      {
+        number: "03",
+        title: "Event Highlights",
+        type: "Short-form Edit",
+        video: "/previews/V3.mp4",
+        challenge: "Condense a massive 4-hour raw event stream into a punchy, high-energy 30-second recruitment trailer.",
+        strategy: "Layered sound design impacts, flash frames, and focused on high-emotion expressions right at the video kickoff.",
+        metric: "Optimized for maximum click-throughs"
+      }
+    ],
+  },
+  // Repeat this exact object structure style for your "motion" group items below!
+];
+
 const accents = {
   red: {
     text: "text-red-500",
@@ -329,7 +366,15 @@ const scrollToSection = (sectionId) => {
                 char === "C" ? (
                   <span
                     key={i}
-                    className="inline-block text-red-500 drop-shadow-[0_0_25px_rgba(239,68,68,0.8)] animate-[pulseC_0.45s_ease_1.2s_1]"
+                    className={`inline-block ${accent.text} ${
+                      accentColor === "red"
+                        ? "drop-shadow-[0_0_25px_rgba(239,68,68,0.8)]"
+                        : accentColor === "blue"
+                        ? "drop-shadow-[0_0_25px_rgba(59,130,246,0.8)]"
+                        : accentColor === "purple"
+                        ? "drop-shadow-[0_0_25px_rgba(168,85,247,0.8)]"
+                        : "drop-shadow-[0_0_25px_rgba(16,185,129,0.8)]"
+                    } animate-[pulseC_0.45s_ease_1.2s_1]`}
                   >
                     C
                   </span>
@@ -339,7 +384,18 @@ const scrollToSection = (sectionId) => {
               )}
             </h1>
 
-            <div className="mt-5 w-36 h-[2px] mx-auto bg-gradient-to-r from-transparent via-red-500 to-transparent animate-pulse"></div>
+            {/* Dynamic line divider below the title */}
+            <div 
+              className={`mt-5 w-36 h-[2px] mx-auto bg-gradient-to-r from-transparent to-transparent animate-pulse ${
+                accentColor === "red"
+                  ? "via-red-500"
+                  : accentColor === "blue"
+                  ? "via-blue-500"
+                  : accentColor === "purple"
+                  ? "via-purple-500"
+                  : "via-emerald-500"
+              }`}
+            ></div>
 
             <div className="mt-10 flex flex-col items-center gap-5">
               <p
@@ -350,7 +406,18 @@ const scrollToSection = (sectionId) => {
               </p>
 
               <div className="w-64 h-[3px] bg-white/10 rounded-full overflow-hidden">
-                <div className="h-full bg-gradient-to-r from-red-500 to-red-400 rounded-full animate-[loadBar_2.4s_linear_forwards]"></div>
+                {/* Dynamic loading bar matching the accent picker */}
+                <div 
+                  className={`h-full bg-gradient-to-r rounded-full animate-[loadBar_2.4s_linear_forwards] ${
+                    accentColor === "red"
+                      ? "from-red-500 to-red-400"
+                      : accentColor === "blue"
+                      ? "from-blue-500 to-blue-400"
+                      : accentColor === "purple"
+                      ? "from-purple-500 to-purple-400"
+                      : "from-emerald-500 to-emerald-400"
+                  }`}
+                ></div>
               </div>
             </div>
           </div>
@@ -1459,15 +1526,7 @@ const scrollToSection = (sectionId) => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.1 }}
                 transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
-                className={`relative group/container rounded-[2rem] border border-white/[0.04] bg-gradient-to-b from-white/[0.01] to-transparent backdrop-blur-xl p-5 sm:p-8 transition-all duration-700 hover:-translate-y-2 ${
-                  accentColor === "red"
-                    ? "hover:shadow-[-15px_0_45px_-20px_rgba(239,68,68,0.2),15px_0_45px_-20px_rgba(239,68,68,0.2)] hover:border-red-500/20"
-                    : accentColor === "blue"
-                    ? "hover:shadow-[-15px_0_45px_-20px_rgba(59,130,246,0.2),15px_0_45px_-20px_rgba(59,130,246,0.2)] hover:border-blue-500/20"
-                    : accentColor === "purple"
-                    ? "hover:shadow-[-15px_0_45px_-20px_rgba(168,85,247,0.2),15px_0_45px_-20px_rgba(168,85,247,0.2)] hover:border-purple-500/20"
-                    : "hover:shadow-[-15px_0_45px_-20px_rgba(16,185,129,0.2),15px_0_45px_-20px_rgba(16,185,129,0.2)] hover:border-emerald-500/20"
-                }`}
+                className="relative group/container rounded-[2rem] border border-white/[0.04] bg-gradient-to-b from-white/[0.01] to-transparent backdrop-blur-xl p-5 sm:p-8 hover:bg-white/[0.06] hover:-translate-y-1 transition-all duration-500"
               >
                 <div className="flex items-center justify-between mb-6 sm:mb-8 pb-4 border-b border-white/[0.04]">
                   <h3 className="text-base sm:text-lg font-black tracking-tight text-white uppercase">
@@ -1501,6 +1560,18 @@ const scrollToSection = (sectionId) => {
                           video: project[3],
                         });
                       }}
+                      /* Plays video cleanly on hover, resets to frame 0 when leaving */
+                      onMouseEnter={(e) => {
+                        const video = e.currentTarget.querySelector("video");
+                        if (video) video.play().catch(() => {});
+                      }}
+                      onMouseLeave={(e) => {
+                        const video = e.currentTarget.querySelector("video");
+                        if (video) {
+                          video.pause();
+                          video.currentTime = 0; 
+                        }
+                      }}
                       className="group text-left flex flex-row sm:flex-col items-center sm:items-start gap-4 sm:gap-0"
                     >
                       {/* Aspect Ratio Box Wrapper */}
@@ -1517,7 +1588,6 @@ const scrollToSection = (sectionId) => {
                           src={project[3]}
                           muted
                           loop
-                          autoPlay
                           playsInline
                           preload="metadata"
                           className="w-full h-full object-cover opacity-40 group-hover:opacity-100 group-hover:scale-[1.05] transition-all duration-700 ease-[cubic-bezier(.19,1,.22,1)]"
@@ -1815,29 +1885,12 @@ const scrollToSection = (sectionId) => {
                   ].map((item, index) => (
                     <div
                       key={index}
-                      className={`group relative overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.025] px-5 py-4 transition-all duration-500 hover:-translate-y-1 cursor-default
-                      ${
-                        accentColor === "red"
-                          ? "hover:border-red-500/30 hover:shadow-[0_15px_30px_-10px_rgba(239,68,68,0.15)]"
-                          : accentColor === "blue"
-                          ? "hover:border-blue-500/30 hover:shadow-[0_15px_30px_-10px_rgba(59,130,246,0.15)]"
-                          : accentColor === "purple"
-                          ? "hover:border-purple-500/30 hover:shadow-[0_15px_30px_-10px_rgba(168,85,247,0.15)]"
-                          : "hover:border-emerald-500/30 hover:shadow-[0_15px_30px_-10px_rgba(16,185,129,0.15)]"
-                      }`}
+                      className="rounded-2xl border border-white/[0.06] bg-white/[0.025] px-5 py-4 hover:bg-white/[0.06] hover:-translate-y-1 transition-all duration-500 cursor-default"
                     >
                       <p className={`${accent.text} uppercase tracking-[4px] text-xs font-bold mb-2`}>
                         {item[0]}
                       </p>
-                      <p className={`font-bold text-white transition-colors duration-300 ${
-                        accentColor === "red"
-                          ? "group-hover:text-red-400"
-                          : accentColor === "blue"
-                          ? "group-hover:text-blue-400"
-                          : accentColor === "purple"
-                          ? "group-hover:text-purple-400"
-                          : "group-hover:text-emerald-400"
-                      }`}>
+                      <p className="text-white font-bold">
                         {item[1]}
                       </p>
                     </div>
